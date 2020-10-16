@@ -1,0 +1,115 @@
+For Tracks
+
+    %title%
+
+    %artist%
+
+    %artists%
+
+    %mainartists%
+
+    %featartists%
+
+    %album%
+
+    %albumartist%
+
+    %tracknumber%
+
+    %tracktotal%
+
+    %discnumber%
+
+    %disctotal%
+
+    %genre%
+
+    %year%
+
+    %date%
+
+    %bpm%
+
+    %label%
+
+    %isrc%
+
+    %upc%
+
+    %explicit%
+
+    %track_id%
+
+    %album_id%
+
+    %artist_id%
+
+    %playlist_id%
+
+    %position%
+
+For Album folders and album cover
+
+    %album_id%
+
+    %album%
+
+    %artist%
+
+    %artist_id%
+
+    %tracktotal%
+
+    %disctotal%
+
+    %type%
+
+    %upc%
+
+    %explicit%
+
+    %label%
+
+    %genre%
+
+    %year%
+
+    %date%
+
+    %bitrate%
+
+For Artist folders and artist image
+
+    %artist%
+
+    %artist_id%
+
+For Playlist folders
+
+    %playlist%
+
+    %playlist_id%
+
+    %owner%
+
+    %owner_id%
+
+    %year%
+
+    %date%
+
+    %explicit%
+
+For Playlist file name
+
+    %title%
+
+    %artist%
+
+    %size%
+
+    %type%
+
+    %id%
+
+    %bitrate%
