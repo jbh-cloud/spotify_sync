@@ -1,9 +1,18 @@
 from src.functions import *
 
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(username='jamesbairdhutchinson',
+                                                   scope='user-library-read',
+                                                   client_id='33bbbfe2ba9a486ebd39ff4db06c689d',
+                                                   client_secret='04c970d3e90f499aac43300552a8326a',
+                                                   redirect_uri='http://127.0.0.1:9090'))
+
 # Load spotify liked songs object
 results = sp.current_user_saved_tracks()
 songs = results['items']
+idx = 1
 while results['next']:
+    idx = idx +1
+    print(f'API hit: {idx}')
     results = sp.next(results)
     songs.extend(results['items'])
 
@@ -11,11 +20,8 @@ while results['next']:
 liked_songs_path = '../data/spotify_liked_songs.json'
 
 try:
-    with open (liked_songs_path, 'r+') as lsp:
-        liked_songs = json.load(lsp)
-        liked_songs.extend(songs)
-        lsp.seek(0)
-        json.dump(liked_songs, lsp)
+    with open (liked_songs_path, mode='w', encoding='utf-8') as lsp:
+        json.dump(songs, lsp)
 except json.decoder.JSONDecodeError as ex:
     print('Failed to load offline liked songs file')
     raise ex
