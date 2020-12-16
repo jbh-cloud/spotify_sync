@@ -16,15 +16,19 @@ while results['next']:
     results = sp.next(results)
     songs.extend(results['items'])
 
+# Trun into key dict
+
+ret = {}
+for s in songs:
+    ret[s['spotify_isrc']] = s
+
 # Write object to disk
 liked_songs_path = '../data/spotify_liked_songs.json'
 
-try:
-    with open (liked_songs_path, mode='w', encoding='utf-8') as lsp:
-        json.dump(songs, lsp)
-except json.decoder.JSONDecodeError as ex:
-    print('Failed to load offline liked songs file')
-    raise ex
+
+with open(liked_songs_path, mode='w', encoding='utf-8') as f:
+    json.dump(ret, f, indent=4, sort_keys=True)
+
 
 
 
