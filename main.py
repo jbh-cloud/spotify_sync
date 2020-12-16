@@ -4,7 +4,7 @@ import src.exportDeezerLinksFromProcessedSongs as exportDeezerLinks
 
 liked_songs_path = 'data/spotify_liked_songs.json'
 processed_songs_path = 'data/processed_songs.json'
-deezer_url_path = '/data/deezer_urls.txt'
+deezer_url_path = 'data/deezer_urls.txt'
 
 print('Spotify liked song downloader v1')
 

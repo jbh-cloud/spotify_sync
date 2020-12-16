@@ -13,7 +13,7 @@ def run (processed_songs_path, deezer_url_path):
     for k in processed_songs.keys():
         song = processed_songs[k]
         if song['matched'] == True and song['downloaded'] == False:
-            song['downloaded'] == True
+            song['downloaded'] = True
             ret.append(song['deezer_url'])
             songs_added = songs_added +1
             print(f'Adding {songs_added} of {len(processed_songs)} total')
