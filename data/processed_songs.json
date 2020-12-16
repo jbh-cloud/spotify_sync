@@ -2533,6 +2533,20 @@
         "spotify_title": "All I Want",
         "spotify_url": "https://open.spotify.com/track/1Fxoj2yydAJV8wDWlglgAo"
     },
+    "BRX6F2000050": {
+        "deezer_artist": "Emicida",
+        "deezer_id": 1160380192,
+        "deezer_title": "\u00c9 Tudo Pra Ontem",
+        "deezer_url": "https://www.deezer.com/track/1160380192",
+        "downloaded": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Emicida",
+        "spotify_id": "7xkCBNRUnBnFjWdaSPf6L5",
+        "spotify_isrc": "BRX6F2000050",
+        "spotify_title": "\u00c9 Tudo Pra Ontem",
+        "spotify_url": "https://open.spotify.com/track/7xkCBNRUnBnFjWdaSPf6L5"
+    },
     "BRZ9C1700058": {
         "deezer_artist": "Joao Donato",
         "deezer_id": 482396092,
@@ -35978,6 +35992,20 @@
         "spotify_isrc": "GBLV62001845",
         "spotify_title": "Better Days",
         "spotify_url": "https://open.spotify.com/track/3yoGE9f5ZhFSTm7L6D7OQC"
+    },
+    "GBLV62024427": {
+        "deezer_artist": "Demi Riqu\u00edsimo",
+        "deezer_id": 1145264292,
+        "deezer_title": "Tagine Machine (Manuel Darquart's 606 Spice Rub Dub)",
+        "deezer_url": "https://www.deezer.com/track/1145264292",
+        "downloaded": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Demi Riqu\u00edsimo",
+        "spotify_id": "3xl0I2hw7NG4Sa1ROCQmAJ",
+        "spotify_isrc": "GBLV62024427",
+        "spotify_title": "Tagine Machine - Manuel Darquart's 606 Spice Rub Dub",
+        "spotify_url": "https://open.spotify.com/track/3xl0I2hw7NG4Sa1ROCQmAJ"
     },
     "GBLVL1500016": {
         "deezer_artist": "Skinshape",
@@ -89416,6 +89444,20 @@
         "spotify_isrc": "USUM72021996",
         "spotify_title": "Mrs. Clean",
         "spotify_url": "https://open.spotify.com/track/5dwd4rLLaw91tKAa3fHJgk"
+    },
+    "USUM72023382": {
+        "deezer_artist": "James Blake",
+        "deezer_id": 1165058802,
+        "deezer_title": "when the party\u2019s over",
+        "deezer_url": "https://www.deezer.com/track/1165058802",
+        "downloaded": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "James Blake",
+        "spotify_id": "0U9oiRl4hYwORmWwkYihZN",
+        "spotify_isrc": "USUM72023382",
+        "spotify_title": "when the party\u2019s over",
+        "spotify_url": "https://open.spotify.com/track/0U9oiRl4hYwORmWwkYihZN"
     },
     "USUMG9900461": {
         "deezer_artist": "Stevie Wonder",
