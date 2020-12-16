@@ -4,15 +4,15 @@ import deezer
 #import social_core
 import time
 
-def run():
+def run(liked_songs_path, processed_songs_path):
      # load liked songs from file
-     liked_songs_path = '../data/spotify_liked_songs.json'
+     #liked_songs_path = '.. /data/spotify_liked_songs.json'
      print(f'Loading {liked_songs_path}')
      with open(liked_songs_path, 'r') as f:
           liked_songs = json.load(f)
 
      # load processed songs from file
-     processed_songs_path = '../data/processed_songs.json'
+     #processed_songs_path = '../data/processed_songs.json'
      print(f'Loading {processed_songs_path}')
      with open(processed_songs_path, 'r') as f:
           processed_songs = json.load(f)
@@ -25,7 +25,7 @@ def run():
      print(f'Processing {liked_songs_len} Spotify liked songs')
      for k in liked_songs.keys():
           if k in processed_songs.keys():
-               print(f'{k} already in processed songs and already successfully matched')
+               #print(f'{k} already in processed songs and already successfully matched')
                continue
 
           ###### try to match tracks that have already been processed but failed to match

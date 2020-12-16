@@ -1,11 +1,8 @@
 import json
 import csv
 
-def run ():
+def run (processed_songs_path, deezer_url_path):
     # load processed songs from file
-    processed_songs_path = '../data/processed_songs.json'
-    deezer_url_path = '../data/deezer_urls.txt'
-
     print(f'Reading {processed_songs_path}')
     with open(processed_songs_path, mode='r', encoding='utf-8') as f:
         processed_songs = json.load(f)
