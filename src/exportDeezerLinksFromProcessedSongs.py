@@ -22,7 +22,7 @@ for k in processed_songs.keys():
 
 print(f'Saving changes to {processed_songs_path}')
 with open(processed_songs_path, mode='w', encoding='utf-8') as f:
-    processed_songs = json.dump(processed_songs, f, indent=4, sort_keys=True)
+    json.dump(processed_songs, f, indent=4, sort_keys=True)
 
 
 print(f'Outputing download links to {deezer_url_path}')
