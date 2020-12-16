@@ -1,5 +1,5 @@
 {
-  "downloadLocation": "/home/seed/deemix Music",
+  "downloadLocation": "/mnt/unionfs/Media/Spotify/liked",
   "tracknameTemplate": "%artist% - %title%",
   "albumTracknameTemplate": "%artist% - %title%",
   "playlistTracknameTemplate": "%artist% - %title%",
