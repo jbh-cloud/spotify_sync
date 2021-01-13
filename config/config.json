@@ -70,7 +70,8 @@
     "syncedLyrics": false,
     "multiArtistSeparator": "default",
     "singleAlbumArtist": false,
-    "coverDescriptionUTF8": false
+    "coverDescriptionUTF8": false,
+    "source": false
   },
   "playlistFilenameTemplate": "playlist",
   "embeddedArtworkPNG": false,

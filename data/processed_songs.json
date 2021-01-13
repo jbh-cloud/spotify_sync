@@ -2645,6 +2645,21 @@
         "spotify_title": "Royal Plus",
         "spotify_url": "https://open.spotify.com/track/3blFqCGeQX4LyZcFfqnhEJ"
     },
+    "CA3CM1900002": {
+        "deezer_artist": "River Tiber",
+        "deezer_id": 725808142,
+        "deezer_title": "Nevada",
+        "deezer_url": "https://www.deezer.com/track/725808142",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "River Tiber",
+        "spotify_id": "0z5ETXpbYwKcGo0CUoZeGs",
+        "spotify_isrc": "CA3CM1900002",
+        "spotify_title": "Nevada",
+        "spotify_url": "https://open.spotify.com/track/0z5ETXpbYwKcGo0CUoZeGs"
+    },
     "CA5KR1962654": {
         "deezer_artist": "Muddy Waters, Johnny Winter, James Cotton",
         "deezer_id": 775820202,
@@ -4675,6 +4690,21 @@
         "spotify_title": "Your Good Times are Just Beginning",
         "spotify_url": "https://open.spotify.com/track/1leuCHz0ng850racZF0E63"
     },
+    "DEDH71110002": {
+        "deezer_artist": "Solomun",
+        "deezer_id": 133032024,
+        "deezer_title": "Love Recycled 2",
+        "deezer_url": "https://www.deezer.com/track/133032024",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Solomun",
+        "spotify_id": "4XXcaXwpVp7OGYJirR1K9J",
+        "spotify_isrc": "DEDH71110002",
+        "spotify_title": "Love Recycled 2",
+        "spotify_url": "https://open.spotify.com/track/4XXcaXwpVp7OGYJirR1K9J"
+    },
     "DEDL81001583": {
         "deezer_artist": "Moomin",
         "deezer_id": 105094152,
@@ -6243,6 +6273,21 @@
         "spotify_title": "Tittle Tattle",
         "spotify_url": "https://open.spotify.com/track/3BRbIsUrsR5AGI33ZI0pre"
     },
+    "DEG932003547": {
+        "deezer_artist": "Nubiyan Twist",
+        "deezer_id": 1063877352,
+        "deezer_title": "If I Know",
+        "deezer_url": "https://www.deezer.com/track/1063877352",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Nubiyan Twist",
+        "spotify_id": "7EKgrGZqebKLFiNaLbvb7X",
+        "spotify_isrc": "DEG932003547",
+        "spotify_title": "If I Know",
+        "spotify_url": "https://open.spotify.com/track/7EKgrGZqebKLFiNaLbvb7X"
+    },
     "DEG932003559": {
         "deezer_artist": "Glenn Astro",
         "deezer_id": 1061675452,
@@ -7236,6 +7281,21 @@
         "spotify_isrc": "DELJ81929308",
         "spotify_title": "Lane 2 Lane",
         "spotify_url": "https://open.spotify.com/track/3mB5p1O1Ro4evJfLM7eOEi"
+    },
+    "DELJ81940361": {
+        "deezer_artist": "digitalluc",
+        "deezer_id": 722927332,
+        "deezer_title": "wantuback",
+        "deezer_url": "https://www.deezer.com/track/722927332",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "digitalluc",
+        "spotify_id": "4U3jZQF6mMTwotTroneb9P",
+        "spotify_isrc": "DELJ81940361",
+        "spotify_title": "wantuback",
+        "spotify_url": "https://open.spotify.com/track/4U3jZQF6mMTwotTroneb9P"
     },
     "DELJ81942018": {
         "deezer_artist": "Dao",
@@ -8384,6 +8444,36 @@
         "spotify_isrc": "DEQ022001855",
         "spotify_title": "Watching You",
         "spotify_url": "https://open.spotify.com/track/5nNKzoQ842OmIuyvTgRgX9"
+    },
+    "DEQ022001935": {
+        "deezer_artist": "Athletic Progression",
+        "deezer_id": 884522022,
+        "deezer_title": "WHITE CRAYON",
+        "deezer_url": "https://www.deezer.com/track/884522022",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Athletic Progression",
+        "spotify_id": "2XXfb3FToGrAOZKGJ1Nwhj",
+        "spotify_isrc": "DEQ022001935",
+        "spotify_title": "WHITE CRAYON",
+        "spotify_url": "https://open.spotify.com/track/2XXfb3FToGrAOZKGJ1Nwhj"
+    },
+    "DEQ022001947": {
+        "deezer_artist": "Vanilla",
+        "deezer_id": 884521762,
+        "deezer_title": "Dreams",
+        "deezer_url": "https://www.deezer.com/track/884521762",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Vanilla",
+        "spotify_id": "1nUII5K5i5PXQ0rSwQ5rl6",
+        "spotify_isrc": "DEQ022001947",
+        "spotify_title": "Dreams",
+        "spotify_url": "https://open.spotify.com/track/1nUII5K5i5PXQ0rSwQ5rl6"
     },
     "DEQ022005241": {
         "deezer_artist": "Booka Shade",
@@ -10358,6 +10448,21 @@
         "spotify_isrc": "DEW250300207",
         "spotify_title": "M\u00f87b - Unreleases Mix",
         "spotify_url": "https://open.spotify.com/track/1O11ZNcoNDzRw5jODG9HsQ"
+    },
+    "DEW250300410": {
+        "deezer_artist": "Rhythm & Sound",
+        "deezer_id": 486271442,
+        "deezer_title": "King in My Empire",
+        "deezer_url": "https://www.deezer.com/track/486271442",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Rhythm & Sound",
+        "spotify_id": "798kDlmSEZkLEKb9z9mg1r",
+        "spotify_isrc": "DEW250300410",
+        "spotify_title": "King in My Empire (Burial Mix) (Mixed)",
+        "spotify_url": "https://open.spotify.com/track/798kDlmSEZkLEKb9z9mg1r"
     },
     "DEWA71900076": {
         "deezer_artist": "Gianni Brezzo",
@@ -18437,6 +18542,21 @@
         "spotify_title": "Needledrop (Laurence Guy Remix)",
         "spotify_url": "https://open.spotify.com/track/6ma2FjSy6QL30nzrSY7dx4"
     },
+    "GB5EM2001938": {
+        "deezer_artist": "Maxwell Udoh",
+        "deezer_id": 1118569592,
+        "deezer_title": "I Like It (Don't Stop)",
+        "deezer_url": "https://www.deezer.com/track/1118569592",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Maxwell Udoh",
+        "spotify_id": "5f3Pu9oUnc4URLrViyqxj9",
+        "spotify_isrc": "GB5EM2001938",
+        "spotify_title": "I Like It (Don't Stop)",
+        "spotify_url": "https://open.spotify.com/track/5f3Pu9oUnc4URLrViyqxj9"
+    },
     "GB5KU0900095": {
         "deezer_artist": "Soul Capsule",
         "deezer_id": 13717007,
@@ -24247,6 +24367,21 @@
         "spotify_title": "Night and Day",
         "spotify_url": "https://open.spotify.com/track/4cbehXRvt6BWzrdjoHuAqZ"
     },
+    "GBBND9800395": {
+        "deezer_artist": "Moloko",
+        "deezer_id": 135875130,
+        "deezer_title": "Sing It Back (Herbert's Tasteful Dub)",
+        "deezer_url": "https://www.deezer.com/track/135875130",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Moloko",
+        "spotify_id": "0TV9tmsVhPCSkjYDRnzHSX",
+        "spotify_isrc": "GBBND9800395",
+        "spotify_title": "Sing It Back - Herbert's Tasteful Dub",
+        "spotify_url": "https://open.spotify.com/track/0TV9tmsVhPCSkjYDRnzHSX"
+    },
     "GBBPW0100092": {
         "deezer_artist": "The Other People Place",
         "deezer_id": 29377331,
@@ -27873,6 +28008,21 @@
         "spotify_title": "Best Part - BBC Maida Vale Session",
         "spotify_url": "https://open.spotify.com/track/28gvzxanNIwChxqQYMJ8vJ"
     },
+    "GBCFB2000201": {
+        "deezer_artist": "DJ Boring",
+        "deezer_id": 939840962,
+        "deezer_title": "Like Water",
+        "deezer_url": "https://www.deezer.com/track/939840962",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "DJ BORING",
+        "spotify_id": "5spCGhval9pvD8Iq9Z3FFi",
+        "spotify_isrc": "GBCFB2000201",
+        "spotify_title": "Like Water",
+        "spotify_url": "https://open.spotify.com/track/5spCGhval9pvD8Iq9Z3FFi"
+    },
     "GBCFB2000203": {
         "deezer_artist": "DJ Boring",
         "deezer_id": 961460442,
@@ -30519,6 +30669,21 @@
         "spotify_title": "Still Dreaming - Ben Hauke Remix",
         "spotify_url": "https://open.spotify.com/track/4iVjs88Ca9IaG1SeEGC6dM"
     },
+    "GBEUE2000286": {
+        "deezer_artist": "Sly5thAve",
+        "deezer_id": 1134049852,
+        "deezer_title": "Right Here (NYC Edit)",
+        "deezer_url": "https://www.deezer.com/track/1134049852",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Sly5thAve",
+        "spotify_id": "4kSb4EdMILGTpleoJ8AEtl",
+        "spotify_isrc": "GBEUE2000286",
+        "spotify_title": "Right Here - NYC Edit",
+        "spotify_url": "https://open.spotify.com/track/4kSb4EdMILGTpleoJ8AEtl"
+    },
     "GBEWK0000005": {
         "deezer_artist": "Moodymann",
         "deezer_id": 12756238,
@@ -32773,6 +32938,21 @@
         "spotify_title": "Love Me",
         "spotify_url": "https://open.spotify.com/track/2HklyUw3TR56nVyVJAIhw5"
     },
+    "GBK3W1901076": {
+        "deezer_artist": "The 1975",
+        "deezer_id": 964226982,
+        "deezer_title": "Shiny Collarbone",
+        "deezer_url": "https://www.deezer.com/track/964226982",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "The 1975",
+        "spotify_id": "3CPekxLofiPyJFmEgGAgqC",
+        "spotify_isrc": "GBK3W1901076",
+        "spotify_title": "Shiny Collarbone",
+        "spotify_url": "https://open.spotify.com/track/3CPekxLofiPyJFmEgGAgqC"
+    },
     "GBK5G1000151": {
         "deezer_artist": "Black Loops",
         "deezer_id": 116898600,
@@ -34102,6 +34282,21 @@
         "spotify_isrc": "GBKPL2013055",
         "spotify_title": "Colours (feat. Ghetts and D Double E)",
         "spotify_url": "https://open.spotify.com/track/7F7cOOiGqrn8aTbeQjVIOD"
+    },
+    "GBKPL2013206": {
+        "deezer_artist": "Pot\u00e9",
+        "deezer_id": 1017106362,
+        "deezer_title": "Pearls",
+        "deezer_url": "https://www.deezer.com/track/1017106362",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Pot\u00e9",
+        "spotify_id": "3zFXaazrIVCYVWiMMhO3Gd",
+        "spotify_isrc": "GBKPL2013206",
+        "spotify_title": "Pearls",
+        "spotify_url": "https://open.spotify.com/track/3zFXaazrIVCYVWiMMhO3Gd"
     },
     "GBKPL2016782": {
         "deezer_artist": "((( O )))",
@@ -42264,6 +42459,21 @@
         "spotify_isrc": "GBUM71026400",
         "spotify_title": "Winter Rose",
         "spotify_url": "https://open.spotify.com/track/5Xc85U4HRX00ykRPhg1vCK"
+    },
+    "GBUM71100016": {
+        "deezer_artist": "Junior Murvin",
+        "deezer_id": 143030192,
+        "deezer_title": "Cool Out Son",
+        "deezer_url": "https://www.deezer.com/track/143030192",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Junior Murvin",
+        "spotify_id": "5nNVVAu1Ruqyo4r0vCHcr9",
+        "spotify_isrc": "GBUM71100016",
+        "spotify_title": "Cool Out Son",
+        "spotify_url": "https://open.spotify.com/track/5nNVVAu1Ruqyo4r0vCHcr9"
     },
     "GBUM71103440": {
         "deezer_artist": "Queen",
@@ -56643,6 +56853,21 @@
         "spotify_title": "Different",
         "spotify_url": "https://open.spotify.com/track/4Hfb1kWHQI1wP8DAm53VXL"
     },
+    "QZFZ42056942": {
+        "deezer_artist": "Sainte",
+        "deezer_id": 887942392,
+        "deezer_title": "Champagne Shots",
+        "deezer_url": "https://www.deezer.com/track/887942392",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Sainte",
+        "spotify_id": "1pU9taHA6AKtWsqTdkpoVf",
+        "spotify_isrc": "QZFZ42056942",
+        "spotify_title": "Champagne Shots",
+        "spotify_url": "https://open.spotify.com/track/1pU9taHA6AKtWsqTdkpoVf"
+    },
     "QZFZ71998506": {
         "deezer_artist": "",
         "deezer_id": "",
@@ -63727,6 +63952,21 @@
         "spotify_title": "Masterpiece",
         "spotify_url": "https://open.spotify.com/track/07qj9w93jk1eA2TGAd6kxj"
     },
+    "UKMEH1900022": {
+        "deezer_artist": "Sault",
+        "deezer_id": 670509822,
+        "deezer_title": "B.A.B.E",
+        "deezer_url": "https://www.deezer.com/track/670509822",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "SAULT",
+        "spotify_id": "1mcfqQYSMsbDzmg9AvynoC",
+        "spotify_isrc": "UKMEH1900022",
+        "spotify_title": "B.A.B.E",
+        "spotify_url": "https://open.spotify.com/track/1mcfqQYSMsbDzmg9AvynoC"
+    },
     "UKMEH2000063": {
         "deezer_artist": "Cleo Sol",
         "deezer_id": 913470082,
@@ -68529,6 +68769,21 @@
         "spotify_title": "The Joys Of Love",
         "spotify_url": "https://open.spotify.com/track/3kZaebs2y4MRwmmMWlH3pD"
     },
+    "US2S72021004": {
+        "deezer_artist": "Sofie",
+        "deezer_id": 884364492,
+        "deezer_title": "Try to Reach Me",
+        "deezer_url": "https://www.deezer.com/track/884364492",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Sofie",
+        "spotify_id": "1O7eGwD51hoij4oi7hGUCH",
+        "spotify_isrc": "US2S72021004",
+        "spotify_title": "Try to Reach Me",
+        "spotify_url": "https://open.spotify.com/track/1O7eGwD51hoij4oi7hGUCH"
+    },
     "US2S72021005": {
         "deezer_artist": "Sofie",
         "deezer_id": 884364502,
@@ -70727,6 +70982,21 @@
         "spotify_title": "Original Format",
         "spotify_url": "https://open.spotify.com/track/2zGMJLSuYqw2iHZz9fVNdS"
     },
+    "USA2P1944574": {
+        "deezer_artist": "DJ Houseplants",
+        "deezer_id": 732701582,
+        "deezer_title": "I Don't Mind",
+        "deezer_url": "https://www.deezer.com/track/732701582",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "DJ Houseplants",
+        "spotify_id": "6gLMADqqBhgUg3G2rDzVGj",
+        "spotify_isrc": "USA2P1944574",
+        "spotify_title": "I Don't Mind",
+        "spotify_url": "https://open.spotify.com/track/6gLMADqqBhgUg3G2rDzVGj"
+    },
     "USA2P1948330": {
         "deezer_artist": "Bishop Nehru",
         "deezer_id": 753239862,
@@ -70922,6 +71192,21 @@
         "spotify_isrc": "USA2P2032062",
         "spotify_title": "Pretty Face - 12\" Version",
         "spotify_url": "https://open.spotify.com/track/574uq1y82QgKJfAX4LEO1t"
+    },
+    "USA2P2038671": {
+        "deezer_artist": "Madlib",
+        "deezer_id": 1121351142,
+        "deezer_title": "Hopprock",
+        "deezer_url": "https://www.deezer.com/track/1121351142",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Madlib",
+        "spotify_id": "51IkXj5HbmwxDXVoUnshYK",
+        "spotify_isrc": "USA2P2038671",
+        "spotify_title": "Hopprock",
+        "spotify_url": "https://open.spotify.com/track/51IkXj5HbmwxDXVoUnshYK"
     },
     "USA2Z1111516": {
         "deezer_artist": "Octo Octa",
@@ -81759,6 +82044,21 @@
         "spotify_title": "Lost my Head there",
         "spotify_url": "https://open.spotify.com/track/7CMMyqgZoTP0yV0Zs4TzSd"
     },
+    "USMTD2000820": {
+        "deezer_artist": "Darkside",
+        "deezer_id": 1180226172,
+        "deezer_title": "Liberty Bell",
+        "deezer_url": "https://www.deezer.com/track/1180226172",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "DARKSIDE",
+        "spotify_id": "1nxudYVyc5RLm8LrSMzeTa",
+        "spotify_isrc": "USMTD2000820",
+        "spotify_title": "Liberty Bell",
+        "spotify_url": "https://open.spotify.com/track/1nxudYVyc5RLm8LrSMzeTa"
+    },
     "USMW41645205": {
         "deezer_artist": "Lee \"Scratch\" Perry",
         "deezer_id": 129483592,
@@ -83592,6 +83892,21 @@
         "spotify_isrc": "USRC11903726",
         "spotify_title": "What You Need",
         "spotify_url": "https://open.spotify.com/track/4O9t8Qq941SAzdGlex4noA"
+    },
+    "USRC12000543": {
+        "deezer_artist": "Kings of Leon",
+        "deezer_id": 1195768512,
+        "deezer_title": "The Bandit",
+        "deezer_url": "https://www.deezer.com/track/1195768512",
+        "downloaded": false,
+        "match_pending_download": true,
+        "match_type": "isrc",
+        "matched": true,
+        "spotify_artist": "Kings of Leon",
+        "spotify_id": "55meRTYBw8S5q7KF3DkjL7",
+        "spotify_isrc": "USRC12000543",
+        "spotify_title": "The Bandit",
+        "spotify_url": "https://open.spotify.com/track/55meRTYBw8S5q7KF3DkjL7"
     },
     "USRC12001323": {
         "deezer_artist": "TOBi",
