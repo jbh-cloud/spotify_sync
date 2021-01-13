@@ -6,8 +6,13 @@ config = config.load()
 
 
 def missing_tracks():
-    print(f'Downloading missing tracks')
     tracks = get_tracks_to_download()
+
+    if not tracks:
+        print('No tracks to download')
+        return
+
+    print(f'Downloading missing tracks')
 
     uris = []
     for k in tracks:
