@@ -1,6 +1,7 @@
-# JBH specific
+# Spotify dl project specific
 config.json
-
+.DS_Store
+.cache-*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
