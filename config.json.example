@@ -1,0 +1,23 @@
+{
+    "deemix": {
+        "config_path": "D:\\source\\spotify_download_legacy\\config",
+        "arl": ""
+    },
+    "spotify": {
+        "client_id": "",
+        "client_secret": "",
+        "username": "",
+        "scope": "user-library-read",
+        "redirect_uri_port": "9090"
+    },
+    "pushover": {
+        "user_key": "",
+        "api_token": ""
+    },
+    "script": {
+        "paths": {
+            "liked_songs": "D:\\source\\spotify_download_legacy\\data\\spotify_liked_songs.json",
+            "processed_songs": "D:\\source\\spotify_download_legacy\\data\\processed_songs.json"
+        }
+    }
+}
