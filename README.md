@@ -1,24 +1,27 @@
 # spotify_download
 
-### Overview
-This project was written to allow me to save my Spotify tracks in flac and a safe location to safe guard from Spotify licensing deals expiring. This allows me to have an 'archive' of my historical likes.
+## Table of contents
+* [Introduction](#Introduction)
+* [Requirements](#Requirements)
+* [Installation](#Installation)
+* [Configuration](#Configuration)
 
-It doesn't actually do any downloading (it could) but generates the required files that will later be fed into deemix.
-
-This is broken down into:
-
-```generateLikedSongsJson.py``` 
-- Query Spotify API to retrieve all liked songs
-- Save these (in Spotify format) as spotify_liked_songs.json
-
-```processLikedSongs.py```
-- Load spotify_liked_songs.json
-- Query Deezer API for each track (takes some time due to Deezer API limit) and return Deezer information if matched
-- Save both sets of data back into processed_songs.json
-
-```exportDeezerLinksFromProcessedSongs.py```
-
-- Load processed_songs.json
-- Read all deezer url's present and save into deezer_urls.txt
+## Introduction
+This project was written to allow me to save my Spotify tracks in flac and a safe location to safe guard from Spotify licensing deals expiring. In its current iteration it is setup to download 'liked' tracks.
+	
+## Requirements
+1. Ubuntu/Debian/Windows
+2. Python 3.6 or higher (```sudo apt install python python-pip```)
+3. requirements.txt modules (see below)
+	
+## Installation
+1. ```git clone https://github.com/jbh-cloud/spotify_download.git```
+2. ```cd spotify_download```
+3. ```sudo python3 -m pip install -r requirements.txt```
+4. ```cp config.json.example config.json```
+5. Configure ```config.json``` as per [Configuration](#Configuration)
+6. Run with ```python3 main.py```
 
 
+## Configuration
+All configuration of this tool is done in ```config.json``` an example of which is contained in the project, ```config.json.example```.

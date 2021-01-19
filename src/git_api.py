@@ -18,16 +18,16 @@ def commit_files():
             repo.git.commit('-m', f'Spotify Downloader auto commit {return_download_commence()}', author='spotify_downloader <automation@jbh.cloud>')
 
 
-def push_commit():
-    if config['git']['auto_commit_persistent_data_folder']:
-        try:
-            repo = Repo(config['git']['data_folder_path'])
-            #origin = repo.remote(name='origin')
-            with repo.git.custom_environment(GIT_SSH_COMMAND=f'ssh -v -i {config["git"]["ssh_key_path"]} -oIdentitiesOnly=yes -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null "$@"'):
-                repo.remotes.origin.push()
-            #origin.push()
-        except:
-            print('Some error occured while pushing the code')
+#def push_commit():
+#    if config['git']['auto_commit_persistent_data_folder']:
+#        try:
+#            repo = Repo(config['git']['data_folder_path'])
+#            #origin = repo.remote(name='origin')
+#            with repo.git.custom_environment(GIT_SSH_COMMAND=f'ssh -v -i {config["git"]["ssh_key_path"]} -oIdentitiesOnly=yes -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null "$@"'):
+#                repo.remotes.origin.push()
+#            #origin.push()
+#        except:
+#            print('Some error occured while pushing the code')
 
 
 if config['git']['auto_commit_persistent_data_folder']:
