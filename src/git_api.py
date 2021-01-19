@@ -36,5 +36,3 @@ if config['git']['auto_commit_persistent_data_folder']:
     except:
         raise Exception(f'Git repo specified is not clean')
 
-
-push_commit()
