@@ -8,7 +8,7 @@ import src.git_api as git_api
 
 
 def main():
-    banner.script_start()
+    #banner.script_start()
     pushover_api.send_notification('Spotify downloader', 'Script started')
 
     spotify_api.download_liked()
