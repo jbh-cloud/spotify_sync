@@ -1,6 +1,7 @@
 from deemix.app.cli import cli
 import deezer as Deezer
-import os
+import os, io
+from contextlib import redirect_stdout
 
 # local imports
 import src.config as config
@@ -10,11 +11,17 @@ import src.pushover_api as pushover_api
 config = config.load()
 arl_valid = False
 
+
 def download_url(url=[]):
     app = cli('', config['deemix']['config_path'])
     app.login()
     url = list(url)
-    app.downloadLink(url)
+
+    # Stop deemix stdout
+    f = io.StringIO()
+    with redirect_stdout(f):
+        # Actual download
+        app.downloadLink(url)
 
 
 def download_file(path):
