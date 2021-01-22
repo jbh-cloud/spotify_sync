@@ -6,6 +6,7 @@ import src.pushover_api as pushover_api
 import src.plex_autoscan as plex_autoscan
 import src.git_api as git_api
 
+
 def main():
     banner.script_start()
     pushover_api.send_notification('Spotify downloader', 'Script started')
