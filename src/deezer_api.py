@@ -1,12 +1,10 @@
 import deezer as Deezer
 import src.config as config
-import json
 
 config = config.load()
 
 # load Deezer and login (for downloads), API is unauthenicated
 client = Deezer.Deezer()
-#client.login_via_arl(config['deezer']['arl'])
 
 
 def match_isrc(song):
