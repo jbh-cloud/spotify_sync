@@ -1,6 +1,6 @@
 from deemix.app.cli import cli
 import deezer as Deezer
-import json
+import os
 
 # local imports
 import src.config as config
@@ -29,7 +29,7 @@ def check_arl_valid():
         login = client.login_via_arl(arl)
 
         if login:
-            with open(config['deemix']['config_path'] / '.arl', 'w') as f:
+            with open(os.path.join(config['deemix']['config_path'], '.arl'), 'w') as f:
                 f.write(arl)
             arl_valid = True
         else:
