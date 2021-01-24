@@ -4,5 +4,5 @@ deemix==2.0.4
 pyfiglet==0.7.5
 python-pushover==0.4
 GitPython==3.1.12
-
+requests==2.25.1
 

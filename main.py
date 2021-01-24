@@ -3,7 +3,7 @@ import src.transform as transform
 import src.banner as banner
 import src.download as download
 import src.pushover_api as pushover_api
-import src.plex_autoscan as plex_autoscan
+import src.autoscan_api as autoscan_api
 import src.git_api as git_api
 
 
@@ -14,7 +14,7 @@ def main():
     spotify_api.download_liked()
     transform.process_liked()
     download.missing_tracks()
-    plex_autoscan.scan(download.downloaded_tracks)
+    autoscan_api.scan(download.downloaded_tracks)
 
     git_api.commit_files()
 
