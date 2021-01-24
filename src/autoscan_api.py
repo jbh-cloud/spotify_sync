@@ -15,9 +15,7 @@ def scan(paths):
             if config['autoscan']['scan_file_parent_path']:
                 p = Path(p).parent
 
-            params = {
-                'dir': p
-            }
+            params = {'dir': p}
 
             if config['autoscan']['auth_enabled']:
                 response = requests.post(config['autoscan']['endpoint'], params=params, auth=(
@@ -31,6 +29,3 @@ def scan(paths):
                 print(f'Plex scan request: {p}')
             else:
                 print(f'Failed to send Plex scan notification: {p}')
-
-
-scan(['/mnt/unionfs/Media/Spotify/liked/CoryaYo/Late Bloom'])
