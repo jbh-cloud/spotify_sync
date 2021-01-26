@@ -2,6 +2,7 @@
 config.json
 .DS_Store
 .cache-*
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
