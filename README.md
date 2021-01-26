@@ -54,9 +54,11 @@ All configuration of this tool is done in ```config.json``` an example of which 
 
 ### deemix
 
+A free Deezer account is required, I would suggest creating a burner account. 
+
 `config_path` *required* - Path to folder that contains deemix config.json. Deemix logs and Deezer cached authenication token will be stored here too.
 
-`arl` *required* - Cookie required for Deemix functionality
+`arl` *required* - [Cookie](https://pastebin.com/Wn7TaZFB) required for Deemix functionality
 
 ### logging
 

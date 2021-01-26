@@ -1,7 +1,11 @@
 {
     "deemix": {
-        "config_path": "",
+        "config_path": "D:\\source\\spotify_dl_data\\config",
         "arl": ""
+    },
+    "logging": {
+        "level": "INFO",
+        "path": ""
     },
     "spotify": {
         "client_id": "",
@@ -15,19 +19,22 @@
         "user_key": "",
         "api_token": ""
     },
-    "plex_autoscan": {
-        "uri": "",
-        "deemix_media_path": "",
-        "enabled": false
+    "autoscan": {
+        "enabled": false,
+        "endpoint": "",
+        "scan_file_parent_path": true,
+        "auth_enabled": false,
+        "username": "",
+        "password": ""
     },
     "git": {
-        "auto_commit_persistent_data_folder": true,
-        "data_folder_path": "D:\\source\\spotify_dl_data"
+        "enabled": false,
+        "persistent_data_folder_path": "D:\\source\\spotify_dl_data"
     },
     "script": {
         "paths": {
-            "liked_songs": "/some/path/spotify_liked_songs.json",
-            "processed_songs": "/some/path/processed_songs.json"
+            "liked_songs": "D:\\source\\spotify_dl_data\\spotify_liked_songs.json",
+            "processed_songs": "D:\\source\\spotify_dl_data\\processed_songs.json"
         }
     }
 }
