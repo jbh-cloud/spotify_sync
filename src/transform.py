@@ -1,8 +1,11 @@
 import src.config as config
 import src.deezer_api as deezer_api
 import json, pathlib
+from src.log import rootLogger
 
 config = config.load()
+
+logger = rootLogger.getChild('TRANSFORM')
 
 
 def _verify_files():
@@ -10,7 +13,8 @@ def _verify_files():
 
     for f in files:
         if not pathlib.Path(f).is_file():
-            print(f'WARNING: {f} not found, creating blank file')
+            logger.info(f'{f} not found, creating blank file')
+            #print(f'WARNING: {f} not found, creating blank file')
             with open(f, mode='w', encoding='utf-8') as fp:
                 json.dump({}, fp)
 
@@ -35,7 +39,7 @@ def process_liked():
         new_songs += 1
         song = liked_songs[k]
 
-        print(f'Processing: {song["track"]["name"]} - {song["track"]["artists"][0]["name"]}')
+        logger.debug(f'Processing: {song["track"]["name"]} - {song["track"]["artists"][0]["name"]}')
 
         result = deezer_api.match_isrc(song)
 
@@ -43,22 +47,27 @@ def process_liked():
             matched_songs += 1
             processed_songs[song['track']['external_ids']['isrc']] = result[1]
         else:
+            logger.debug(f'Failed matching via {song["track"]["external_ids"]["isrc"]}, attempting fuzzy search')
             result = deezer_api.match_adv(song)
             if result[0]:
+                logger.debug(f'Matched via fuzzy search')
                 matched_songs += 1
                 processed_songs[song['track']['external_ids']['isrc']] = result[1]
             else:
+                logger.debug(f'Failed to match via fuzzy search, not matching..')
                 processed_songs[song['track']['external_ids']['isrc']] = result[1]
 
         i += 1
 
-    print(f'Matched {matched_songs}/{new_songs} new liked songs')
+    logger.info(f'Matched {matched_songs}/{new_songs} new liked songs')
+    #print(f'Matched {matched_songs}/{new_songs} new liked songs')
 
     with open(config["script"]["paths"]["processed_songs"], mode='w', encoding='utf-8') as f:
         json.dump(processed_songs, f, indent=4, sort_keys=True)
 
 
 def get_tracks_to_download():
+    logger.debug(f'Opening {config["script"]["paths"]["processed_songs"]}')
     with open(config["script"]["paths"]["processed_songs"], mode='r', encoding='utf-8') as f:
         processed_songs = json.load(f)
 
@@ -66,6 +75,7 @@ def get_tracks_to_download():
     for k in processed_songs.keys():
         if "match_pending_download" in processed_songs[k]:
             if processed_songs[k]["match_pending_download"]:
+                logger.debug(f'{k} is matched and awaiting download')
                 ret[k] = processed_songs[k].copy()
 
     return ret

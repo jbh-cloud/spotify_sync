@@ -4,7 +4,9 @@ import urllib
 
 # local imports
 import src.config as config
+from src.log import rootLogger
 
+logger = rootLogger.getChild('AUTOSCAN_API')
 
 config = config.load()
 
@@ -26,6 +28,10 @@ def scan(paths):
                 response = requests.post(config['autoscan']['endpoint'], params=params)
 
             if response.status_code == 200:
-                print(f'Plex scan request: {p}')
+                logger.debug(f'Plex scan request: {p}')
+                #print(f'Plex scan request: {p}')
+
             else:
-                print(f'Failed to send Plex scan notification: {p}')
+                logger.error(f'Failed to send Plex scan notification: {p}')
+                #print(f'Failed to send Plex scan notification: {p}')
+        logger.info(f'Processed {len(paths)} scan requests')

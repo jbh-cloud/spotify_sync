@@ -1,9 +1,14 @@
-import src.config as config
-from src.transform import get_tracks_to_download, set_tracks_as_downloaded
-import src.deemix_api as deemix_api
 from datetime import datetime
 import os
 
+# local imports
+from src.log import rootLogger
+import src.config as config
+from src.transform import get_tracks_to_download, set_tracks_as_downloaded
+import src.deemix_api as deemix_api
+from src.deemix_api import check_arl_valid
+
+logger = rootLogger.getChild('DOWNLOAD')
 
 config = config.load()
 download_commence = ''
@@ -15,13 +20,14 @@ def return_download_commence():
 
 
 def missing_tracks():
+    logger.info('Getting missing tracks to download')
     tracks = get_tracks_to_download()
 
-    if not tracks:
-        print('No tracks to download')
-        return
+    logger.info(f'{len(tracks)} missing tracks')
 
-    print(f'Downloading missing tracks')
+    if not tracks:
+        logger.info('No tracks to download')
+        return
 
     uris = []
     for k in tracks:
@@ -40,7 +46,8 @@ def get_file_download_paths():
     global downloaded_tracks
     # Guess log file name
     try:
-        with open(os.path.join(config["deemix"]["config_path"], 'logs', f'{download_commence}.log'), mode='r', encoding='utf-8') as f:
+        log = os.path.join(config["deemix"]["config_path"], 'logs', f'{download_commence}.log')
+        with open(log, mode='r', encoding='utf-8') as f:
             log = f.read()
             lines = log.split('\n')
             slices = []
@@ -53,6 +60,7 @@ def get_file_download_paths():
                 downloaded_tracks.append(lines[i])
 
     except:
-        raise Exception('Failed opening file')
+        logger.error(f'Failed opening {log}')
+        raise Exception(f'Failed opening {log}')
 
 

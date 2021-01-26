@@ -1,28 +1,54 @@
-import src.spotify_api as spotify_api
-import src.transform as transform
-import src.banner as banner
-import src.download as download
-import src.pushover_api as pushover_api
-import src.autoscan_api as autoscan_api
-import src.git_api as git_api
+import argparse, sys
+
+
+# local imports
+from src import actions
 
 
 def main():
-    #banner.script_start()
-    pushover_api.send_notification('Spotify downloader', 'Script started')
+    parser = argparse.ArgumentParser(description='Spotify downloader V1')
+    required = parser.add_mutually_exclusive_group(required=True)
+    required.add_argument('--auto', action='store_true', help='Runs the downloader in automatic mode')
+    required.add_argument('--authorize-spotify', action='store_true', required=False,
+                        help='Populate OAuth cached creds')
+    required.add_argument('--sync-liked', action='store_true', required=False,
+                        help='Queries Spotify for liked songs and downloads metadata')
+    required.add_argument('--match-liked', action='store_true',
+                          help='Queries locally saved liked song metadata and attempts to match on Deezer')
+    required.add_argument('--download-missing', action='store_true', help='Attempts to download missing songs')
+    parser.add_argument('--sync-liked-custom-user', action='store_true', required=False,
+                        help='Specifies a custom user to query Spotify for')
+    parser.add_argument('--spotify-client-id', required='--sync-liked-custom-user' in sys.argv, type=str,
+                        help='Custom Spotify user client id')
+    parser.add_argument('--spotify-client-secret', required='--sync-liked-custom-user' in sys.argv, type=str,
+                        help='Custom Spotify user client secret')
+    parser.add_argument('--spotify-username', required='--sync-liked-custom-user' in sys.argv, type=str,
+                        help='Custom Spotify username')
+    parser.add_argument('--liked-songs-path', required='--sync-liked-custom-user' in sys.argv, type=str,
+                        help='Path to non-existent json file')
 
-    spotify_api.download_liked()
-    transform.process_liked()
-    download.missing_tracks()
-    autoscan_api.scan(download.downloaded_tracks)
+    args = parser.parse_args()
 
-    git_api.commit_files()
-
-    if len(download.downloaded_tracks) >= 1:
-        pushover_api.send_notification('Spotify downloader',
-                                       f'Successfully downloaded {len(download.downloaded_tracks)} new tracks')
-    pushover_api.send_notification('Spotify downloader', f'Script finished')
-    print('\r--Done!')
+    if args.auto:
+        actions.auto()
+    elif args.sync_liked:
+        if args.sync_liked_custom_user:
+            actions.sync_liked_custom_user(
+                args.client_id,
+                args.client_secret,
+                args.username,
+                args.liked_songs_path
+            )
+        else:
+            actions.sync_liked()
+    elif args.authorize_spotify:
+        actions.authorize_spotify()
+    elif args.match_liked:
+        actions.match_liked()
+    elif args.download_missing:
+        actions.download_missing()
+    else:
+        print('No arguments specified, try main.py --help')
 
 
 if __name__ == '__main__':
