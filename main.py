@@ -16,6 +16,9 @@ def main():
     required.add_argument('--match-liked', action='store_true',
                           help='Queries locally saved liked song metadata and attempts to match on Deezer')
     required.add_argument('--download-missing', action='store_true', help='Attempts to download missing songs')
+    required.add_argument('--manual-scan', action='store_true', help='Invokes Autoscan API against provided paths')
+    parser.add_argument('--paths', required='--manual-scan' in sys.argv, type=list,
+                        help='List of paths to scan')
     parser.add_argument('--sync-liked-custom-user', action='store_true', required=False,
                         help='Specifies a custom user to query Spotify for')
     parser.add_argument('--spotify-client-id', required='--sync-liked-custom-user' in sys.argv, type=str,
@@ -47,6 +50,8 @@ def main():
         actions.match_liked()
     elif args.download_missing:
         actions.download_missing()
+    elif args.manual_scan:
+        actions.scan(args.paths)
     else:
         print('No arguments specified, try main.py --help')
 

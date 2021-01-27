@@ -58,3 +58,9 @@ def download_missing():
 
 def authorize_spotify():
     spotify_api.cache_spotify_auth()
+
+
+def scan(paths):
+    logger.info('Script started with --manual-scan flag')
+    autoscan_api.scan(paths)
+    logger.info('Script finished')
