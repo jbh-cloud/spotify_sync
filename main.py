@@ -1,6 +1,5 @@
 import argparse, sys
 
-
 # local imports
 from src import actions
 
@@ -8,16 +7,16 @@ from src import actions
 def main():
     parser = argparse.ArgumentParser(description='Spotify downloader V1')
     required = parser.add_mutually_exclusive_group(required=True)
-    required.add_argument('auto', action='store_true', help='Runs the downloader in automatic mode')
-    required.add_argument('authorize-spotify', action='store_true', required=False,
-                        help='Populate OAuth cached creds')
-    required.add_argument('sync-liked', action='store_true', required=False,
-                        help='Queries Spotify for liked songs and downloads metadata')
-    required.add_argument('match-liked', action='store_true',
+    required.add_argument('-auto', action='store_true', help='Runs the downloader in automatic mode')
+    required.add_argument('-authorize-spotify', action='store_true', required=False,
+                          help='Populate OAuth cached creds')
+    required.add_argument('-sync-liked', action='store_true', required=False,
+                          help='Queries Spotify for liked songs and downloads metadata')
+    required.add_argument('-match-liked', action='store_true',
                           help='Queries locally saved liked song metadata and attempts to match on Deezer')
-    required.add_argument('download-missing', action='store_true', help='Attempts to download missing songs')
-    required.add_argument('manual-scan', action='store_true', help='Invokes Autoscan API against provided paths')
-    parser.add_argument('--paths', required='manual-scan' in sys.argv, type=str, nargs="*",
+    required.add_argument('-download-missing', action='store_true', help='Attempts to download missing songs')
+    required.add_argument('-manual-scan', action='store_true', help='Invokes Autoscan API against provided paths')
+    parser.add_argument('--paths', required='-manual-scan' in sys.argv, type=str,
                         help='List of paths to scan')
     parser.add_argument('--sync-liked-custom-user', action='store_true', required=False,
                         help='Specifies a custom user to query Spotify for')
@@ -58,4 +57,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
