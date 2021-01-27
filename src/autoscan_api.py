@@ -14,7 +14,7 @@ config = config.load()
 def scan(paths):
     if config['autoscan']['enabled']:
         for p in paths:
-            if config['autoscan']['scan_file_parent_path']:
+            if Path(p).is_file():
                 p = Path(p).parent
 
             params = {'dir': p}
