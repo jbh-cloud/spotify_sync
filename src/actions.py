@@ -11,7 +11,7 @@ logger = rootLogger.getChild('ACTIONS')
 
 
 def auto():
-    logger.info('Script started with --auto flag')
+    logger.info('Script started with auto flag')
     pushover_api.send_notification('Spotify downloader', 'Script started with --auto flag')
     download.check_arl_valid()
     git_api.assert_repo()
@@ -33,25 +33,25 @@ def auto():
 
 
 def sync_liked():
-    logger.info('Script started with --download-liked flag')
+    logger.info('Script started with download-liked flag')
     spotify_api.download_liked()
     logger.info('Script finished')
 
 
 def sync_liked_custom_user(client_id, client_secret, username, liked_songs_path):
-    logger.info('Script started with --download-liked flag')
+    logger.info('Script started with download-liked flag')
     spotify_api.download_liked_manual(client_id, client_secret, username, liked_songs_path)
     logger.info('Script finished')
 
 
 def match_liked():
-    logger.info('Script started with --process-liked flag')
+    logger.info('Script started with process-liked flag')
     transform.process_liked()
     logger.info('Script finished')
 
 
 def download_missing():
-    logger.info('Script started with --download-missing flag')
+    logger.info('Script started with download-missing flag')
     download.missing_tracks()
     logger.info('Script finished')
 
@@ -61,6 +61,6 @@ def authorize_spotify():
 
 
 def scan(paths):
-    logger.info('Script started with --manual-scan flag')
+    logger.info('Script started with manual-scan flag')
     autoscan_api.scan(paths)
     logger.info('Script finished')
