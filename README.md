@@ -12,7 +12,7 @@ This project was written to allow me to save my Spotify tracks in flac and a saf
 	
 ## Requirements
 1. Ubuntu/Debian/Windows
-2. Python 3.6 or higher (```sudo apt install python python-pip```)
+2. Python 3.6 or higher (```sudo apt install python3.8 python-pip```)
 3. requirements.txt modules (see below)
 	
 ## Installation
@@ -111,3 +111,7 @@ You will need to create an application as per this [article](https://developer.s
 `[paths][liked_songs]` *required* - Path to existent or non-existent json file. This will store Spotify liked song metadata
 
 `[paths][processed_songs]` *required* - Path to existent or non-existent json file. This is what the script uses as persistent storage. 
+
+`[spotify_playlists][enabled]` - Enables / disables inclusion of spotify playlist songs in download
+
+`[spotify_playlists][excluded]` - An array of playlists you wish to be excluded from download (case sensitive)
