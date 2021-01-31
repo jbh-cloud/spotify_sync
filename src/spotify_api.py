@@ -1,6 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import json
+from tabulate import tabulate
 
 # Local imports
 from src import config
@@ -146,3 +147,35 @@ def download_liked_manual(client_id, client_secret, username, liked_songs_path):
 
     with open(liked_songs_path, mode='w', encoding='utf-8') as f:
         json.dump(ret, f, indent=4, sort_keys=True)
+
+
+def get_playlist_stats():
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+        username=config['spotify']['username'],
+        scope=config['spotify']['scope'],
+        client_id=config['spotify']['client_id'],
+        client_secret=config['spotify']['client_secret'],
+        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}')
+    )
+    ret = []
+
+    playlists = get_all_playlists(config['script']['spotify_playlists']['excluded'])
+    for k in playlists:
+        playlist = playlists[k]
+        ret.append({
+            "name": playlist["name"],
+            "id": playlist["id"],
+            "collaborative": playlist["collaborative"],
+            "public": playlist["public"],
+            "tracks": playlist["tracks"]["total"],
+            "url": playlist["external_urls"]["spotify"]
+        })
+    return ret
+
+
+def display_playlist_stats():
+    stats = get_playlist_stats()
+    header = stats[0].keys()
+    rows = [x.values() for x in stats]
+    print()
+    print(tabulate(rows, header))

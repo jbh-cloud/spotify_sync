@@ -40,12 +40,37 @@ Other modes..
 
 ```
 usage: main.py [-h]
-		(--auto | --authorize-spotify | --sync-liked | --match-liked | --download-missing)
-		[--sync-liked-custom-user]
-		[--spotify-client-id SPOTIFY_CLIENT_ID]
-		[--spotify-client-secret SPOTIFY_CLIENT_SECRET]
-		[--spotify-username SPOTIFY_USERNAME]
-		[--liked-songs-path LIKED_SONGS_PATH]
+               (-auto | -authorize-spotify | -sync-liked | -match-liked | -download-missing | -manual-scan | -playlist-stats)
+               [--paths [PATHS [PATHS ...]]] [--sync-liked-custom-user]
+               [--spotify-client-id SPOTIFY_CLIENT_ID]
+               [--spotify-client-secret SPOTIFY_CLIENT_SECRET]
+               [--spotify-username SPOTIFY_USERNAME]
+               [--liked-songs-path LIKED_SONGS_PATH]
+
+Spotify downloader V1
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -auto                 Runs the downloader in automatic mode
+  -authorize-spotify    Populate OAuth cached creds
+  -sync-liked           Queries Spotify for liked songs and downloads metadata
+  -match-liked          Queries locally saved liked song metadata and attempts
+                        to match on Deezer
+  -download-missing     Attempts to download missing songs
+  -manual-scan          Invokes Autoscan API against provided paths
+  -playlist-stats       Displays stats associated with Spotify playlists
+  --paths [PATHS [PATHS ...]]
+                        List of paths to scan
+  --sync-liked-custom-user
+                        Specifies a custom user to query Spotify for
+  --spotify-client-id SPOTIFY_CLIENT_ID
+                        Custom Spotify user client id
+  --spotify-client-secret SPOTIFY_CLIENT_SECRET
+                        Custom Spotify user client secret
+  --spotify-username SPOTIFY_USERNAME
+                        Custom Spotify username
+  --liked-songs-path LIKED_SONGS_PATH
+                        Path to non-existent json file
 ```
 
 
