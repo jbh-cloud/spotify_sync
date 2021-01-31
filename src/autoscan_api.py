@@ -3,7 +3,7 @@ from pathlib import Path
 import urllib
 
 # local imports
-import src.config as config
+from src import config
 from src.log import rootLogger
 
 logger = rootLogger.getChild('AUTOSCAN_API')
@@ -29,9 +29,6 @@ def scan(paths):
 
             if response.status_code == 200:
                 logger.debug(f'Plex scan request: {p}')
-                #print(f'Plex scan request: {p}')
-
             else:
                 logger.error(f'Failed to send Plex scan notification: {p}')
-                #print(f'Failed to send Plex scan notification: {p}')
         logger.info(f'Processed {len(paths)} scan requests')

@@ -3,10 +3,8 @@ import os
 
 # local imports
 from src.log import rootLogger
-import src.config as config
-from src.transform import get_tracks_to_download, set_tracks_as_downloaded
-import src.deemix_api as deemix_api
-from src.deemix_api import check_arl_valid
+from src import config
+from src import transform, deemix_api
 
 logger = rootLogger.getChild('DOWNLOAD')
 
@@ -21,7 +19,7 @@ def return_download_commence():
 
 def missing_tracks():
     logger.info('Getting missing tracks to download')
-    tracks = get_tracks_to_download()
+    tracks = transform.get_tracks_to_download()
 
     logger.info(f'{len(tracks)} missing tracks')
 
@@ -37,7 +35,7 @@ def missing_tracks():
     download_commence = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
     deemix_api.download_url(uris)
-    set_tracks_as_downloaded(tracks)
+    transform.set_tracks_as_downloaded(tracks)
     get_file_download_paths()
 
 

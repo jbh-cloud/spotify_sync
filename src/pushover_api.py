@@ -1,5 +1,7 @@
-import src.config as config
 from pushover import Client
+
+# local imports
+from src import config
 
 config = config.load()
 

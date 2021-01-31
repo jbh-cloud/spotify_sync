@@ -1,5 +1,5 @@
 import src.config as config
-import src.deezer_api as deezer_api
+from src.deezer_api import match_adv, match_isrc
 import json, pathlib
 from src.log import rootLogger
 
@@ -14,7 +14,6 @@ def _verify_files():
     for f in files:
         if not pathlib.Path(f).is_file():
             logger.info(f'{f} not found, creating blank file')
-            #print(f'WARNING: {f} not found, creating blank file')
             with open(f, mode='w', encoding='utf-8') as fp:
                 json.dump({}, fp)
 
@@ -41,14 +40,14 @@ def process_liked():
 
         logger.debug(f'Processing: {song["track"]["name"]} - {song["track"]["artists"][0]["name"]}')
 
-        result = deezer_api.match_isrc(song)
+        result = match_isrc(song)
 
         if result[0]:
             matched_songs += 1
             processed_songs[song['track']['external_ids']['isrc']] = result[1]
         else:
             logger.debug(f'Failed matching via {song["track"]["external_ids"]["isrc"]}, attempting fuzzy search')
-            result = deezer_api.match_adv(song)
+            result = match_adv(song)
             if result[0]:
                 logger.debug(f'Matched via fuzzy search')
                 matched_songs += 1
@@ -60,7 +59,6 @@ def process_liked():
         i += 1
 
     logger.info(f'Matched {matched_songs}/{new_songs} new liked songs')
-    #print(f'Matched {matched_songs}/{new_songs} new liked songs')
 
     with open(config["script"]["paths"]["processed_songs"], mode='w', encoding='utf-8') as f:
         json.dump(processed_songs, f, indent=4, sort_keys=True)

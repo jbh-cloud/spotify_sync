@@ -1,11 +1,12 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import json
-import src.config as config
+
+# Local imports
+from src import config
 from src.log import rootLogger
 
 logger = rootLogger.getChild('SPOTIFY_API')
-
 config = config.load()
 
 
@@ -87,11 +88,9 @@ def download_liked():
     )
 
     logger.info('Fetching liked songs')
-
-    # Load spotify liked songs object
-    idx = 1
     results = sp.current_user_saved_tracks()
     songs = results['items']
+    idx = 1
     while results['next']:
         logger.debug(f'Sending Spotify API call {idx}')
         results = sp.next(results)
@@ -133,8 +132,6 @@ def download_liked_manual(client_id, client_secret, username, liked_songs_path):
     )
 
     print('Fetching liked songs..')
-
-    # Load spotify liked songs object
     results = sp.current_user_saved_tracks()
     songs = results['items']
 

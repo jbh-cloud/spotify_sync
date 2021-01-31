@@ -1,5 +1,7 @@
 import deezer as Deezer
-import src.config as config
+
+# local imports
+from src import config
 
 config = config.load()
 

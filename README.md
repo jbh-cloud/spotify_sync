@@ -60,6 +60,8 @@ A free Deezer account is required, I would suggest creating a burner account.
 
 `arl` *required* - [Cookie](https://pastebin.com/Wn7TaZFB) required for Deemix functionality
 
+`download_path` *required* - Path that Deemix will download into
+
 ### logging
 
 `level` - *required* - Either 'INFO' or 'DEBUG'
@@ -74,7 +76,7 @@ You will need to create an application as per this [article](https://developer.s
 
 `client_secret` *required* - Application secret you have setup
 
-`username` *required* -  Spotify username
+`username` *required* -  Spotify username *must be lower case*
 
 `scope` *required* -  'user-library-read'
 

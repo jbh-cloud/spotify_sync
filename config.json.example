@@ -1,7 +1,8 @@
 {
     "deemix": {
         "config_path": "D:\\source\\spotify_dl_data\\config",
-        "arl": ""
+        "arl": "",
+        "download_path": "D:/deemix_Music"
     },
     "logging": {
         "level": "INFO",
@@ -11,7 +12,7 @@
         "client_id": "",
         "client_secret": "",
         "username": "",
-        "scope": "user-library-read",
+        "scope": "user-library-read, playlist-read-private",
         "redirect_uri_port": "9090"
     },
     "pushover": {
@@ -35,6 +36,10 @@
         "paths": {
             "liked_songs": "D:\\source\\spotify_dl_data\\spotify_liked_songs.json",
             "processed_songs": "D:\\source\\spotify_dl_data\\processed_songs.json"
+        },
+        "spotify_playlists": {
+            "enabled": false,
+            "excluded": []
         }
     }
 }
