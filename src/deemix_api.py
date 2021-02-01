@@ -56,7 +56,7 @@ def download_url(url=[]):
     app = cli('', config['deemix']['config_path'])
     app.login()
     url = list(url)
-    logger.info(f'Downloading {url}')
+    logger.info(f'Downloading {len(url)} songs from Deezer')
     app.downloadLink(url)
 
 

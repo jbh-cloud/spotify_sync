@@ -31,6 +31,7 @@ def process_liked():
     new_songs = 0
     matched_songs = 0
 
+    logger.info('Starting match process')
     for k in liked_songs.keys():
         if k in processed_songs.keys():
             continue

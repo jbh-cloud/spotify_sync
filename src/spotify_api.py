@@ -46,7 +46,7 @@ def get_all_playlists(playlists_to_exclude):
             if playlist['name'] not in playlists_to_exclude:
                 ret[playlist["id"]] = playlist
             else:
-                logger.info(f'{playlist["name"]} was in exlude list, skipping')
+                logger.debug(f'{playlist["name"]} was in exlude list, skipping')
     return ret
 
 
@@ -64,7 +64,7 @@ def get_all_songs_from_playlists(playlists):
         playlist = playlists[k]
         playlist_songs = []
 
-        logger.info(f'Fetching songs for playlist: {playlist["name"]}')
+        logger.debug(f'Fetching songs for playlist: {playlist["name"]}')
         results = sp.playlist_tracks(playlist["id"])
         playlist_songs.extend(results['items'])
         idx = 1
@@ -73,7 +73,7 @@ def get_all_songs_from_playlists(playlists):
             results = sp.next(results)
             playlist_songs.extend(results['items'])
             idx += 1
-        logger.info(f'{len(playlist_songs)} song(s)')
+        logger.debug(f'{len(playlist_songs)} song(s)')
         songs.extend(playlist_songs)
 
     return songs
