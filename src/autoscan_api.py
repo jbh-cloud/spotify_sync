@@ -13,6 +13,8 @@ config = config.load()
 
 def scan(paths):
     if config['autoscan']['enabled']:
+        # get unique
+        paths = list(set(paths))
         for p in paths:
             if Path(p).is_file():
                 p = Path(p).parent
