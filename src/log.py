@@ -21,7 +21,7 @@ rootLogger.addHandler(consoleHandler)
 
 # File logger
 if config["logging"]["path"] == '':
-    log_file = os.path.join(os.getcwd(), '..', 'logs', 'spotify_download.log')
+    log_file = os.path.join(os.getcwd(), 'logs', 'spotify_download.log')
 else:
     log_file = config["logging"]["path"]
 
@@ -34,7 +34,7 @@ if not os.path.exists(os.path.dirname(log_file)):
 
 fileHandler = RotatingFileHandler(
     log_file,
-    maxBytes=1024 * 1024 * 2,
+    maxBytes=4000,
     backupCount=5,
     encoding='utf-8'
 )
