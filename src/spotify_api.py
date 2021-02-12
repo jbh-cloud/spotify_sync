@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import json
 from tabulate import tabulate
+import os
 
 # Local imports
 from src import config
@@ -12,11 +13,17 @@ config = config.load()
 
 
 def cache_spotify_auth():
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(username=config['spotify']['username'],
-                                                   scope=config['spotify']['scope'],
-                                                   client_id=config['spotify']['client_id'],
-                                                   client_secret=config['spotify']['client_secret'],
-                                                   redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}'))
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+        username=config['spotify']['username'],
+        scope=config['spotify']['scope'],
+        client_id=config['spotify']['client_id'],
+        client_secret=config['spotify']['client_secret'],
+        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}',
+        cache_path=os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            f'.cache-{config["spotify"]["username"]}')
+        )
+    )
 
     query = sp.current_user_saved_tracks()
     return
@@ -28,7 +35,11 @@ def get_all_playlists(playlists_to_exclude):
         scope=config['spotify']['scope'],
         client_id=config['spotify']['client_id'],
         client_secret=config['spotify']['client_secret'],
-        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}')
+        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}',
+        cache_path=os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            f'.cache-{config["spotify"]["username"]}')
+        )
     )
 
     results = sp.user_playlists(config['spotify']['username'])
@@ -56,7 +67,11 @@ def get_all_songs_from_playlists(playlists):
         scope=config['spotify']['scope'],
         client_id=config['spotify']['client_id'],
         client_secret=config['spotify']['client_secret'],
-        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}')
+        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}',
+        cache_path=os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            f'.cache-{config["spotify"]["username"]}')
+        )
     )
     songs = []
 
@@ -85,7 +100,11 @@ def download_liked():
         scope=config['spotify']['scope'],
         client_id=config['spotify']['client_id'],
         client_secret=config['spotify']['client_secret'],
-        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}')
+        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}',
+        cache_path=os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            f'.cache-{config["spotify"]["username"]}')
+        )
     )
 
     logger.info('Fetching liked songs')
@@ -129,7 +148,11 @@ def download_liked_manual(client_id, client_secret, username, liked_songs_path):
         scope=config['spotify']['scope'],
         client_id=client_id,
         client_secret=client_secret,
-        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}')
+        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}',
+        cache_path=os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            f'.cache-{config["spotify"]["username"]}')
+        )
     )
 
     print('Fetching liked songs..')
@@ -155,7 +178,11 @@ def get_playlist_stats():
         scope=config['spotify']['scope'],
         client_id=config['spotify']['client_id'],
         client_secret=config['spotify']['client_secret'],
-        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}')
+        redirect_uri=f'http://127.0.0.1:{config["spotify"]["redirect_uri_port"]}',
+        cache_path=os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            f'.cache-{config["spotify"]["username"]}')
+        )
     )
     ret = []
 
