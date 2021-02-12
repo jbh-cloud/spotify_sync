@@ -32,13 +32,13 @@ def auto():
 
 def sync_liked():
     logger.info('Script started with -sync-liked flag')
-    download.download_liked()
+    spotify_api.download_liked()
     logger.info('Script finished')
 
 
 def sync_liked_custom_user(client_id, client_secret, username, liked_songs_path):
     logger.info('Script started with -download-liked flag')
-    download.download_liked_manual(client_id, client_secret, username, liked_songs_path)
+    spotify_api.download_liked_manual(client_id, client_secret, username, liked_songs_path)
     logger.info('Script finished')
 
 
