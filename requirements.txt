@@ -1,4 +1,4 @@
-spotipy==2.12.0
+spotipy==2.16.1
 deezer-py==0.0.14
 deemix==2.0.4
 pyfiglet==0.7.5
