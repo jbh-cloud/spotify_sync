@@ -14,6 +14,7 @@ config = config.load()
 
 def cache_spotify_auth():
     sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+        open_browser=False,
         username=config['spotify']['username'],
         scope=config['spotify']['scope'],
         client_id=config['spotify']['client_id'],
