@@ -35,7 +35,8 @@
     "script": {
         "paths": {
             "liked_songs": "D:\\source\\spotify_dl_data\\spotify_liked_songs.json",
-            "processed_songs": "D:\\source\\spotify_dl_data\\processed_songs.json"
+            "processed_songs": "D:\\source\\spotify_dl_data\\processed_songs.json",
+            "playlist_mapping": "D:\\source\\spotify_dl_data\\playlist_mapping.json"
         },
         "spotify_playlists": {
             "enabled": false,

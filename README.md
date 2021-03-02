@@ -137,7 +137,9 @@ You will need to create an application as per this [article](https://developer.s
 
 `[paths][liked_songs]` *required* - Path to existent or non-existent json file. This will store Spotify liked song metadata
 
-`[paths][processed_songs]` *required* - Path to existent or non-existent json file. This is what the script uses as persistent storage. 
+`[paths][processed_songs]` *required* - Path to existent or non-existent json file. This is what the script uses as persistent storage.
+
+`[paths][playlist_mapping]` *required if [spotify_playlists] is enabled* - Path to existent or non-existent json file. This is where the mapping of songs to playlists is stored.
 
 `[spotify_playlists][enabled]` - Enables / disables inclusion of spotify playlist songs in download
 
