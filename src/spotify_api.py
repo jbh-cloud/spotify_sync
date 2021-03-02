@@ -35,6 +35,7 @@ def initialize_spotipy():
     global sp
     if not sp:
         sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+            open_browser=False,
             username=config['spotify']['username'],
             scope=config['spotify']['scope'],
             client_id=config['spotify']['client_id'],
