@@ -81,7 +81,7 @@ All configuration of this tool is done in ```config.json``` an example of which 
 
 A free Deezer account is required, I would suggest creating a burner account. 
 
-`config_path` *required* - Path to folder that contains deemix config.json. Deemix logs and Deezer cached authenication token will be stored here too.
+`config_path` *required* - Path to an empty folder that will contain deemix config, logs and Deezer cached authenication token.
 
 `arl` *required* - [Cookie](https://pastebin.com/Wn7TaZFB) required for Deemix functionality
 
@@ -103,7 +103,7 @@ You will need to create an application as per this [article](https://developer.s
 
 `username` *required* -  Spotify username *must be lower case*
 
-`scope` *required* -  'user-library-read'
+`scope` *required* -  'user-library-read' or 'user-library-read, playlist-read-private' if wanting to download playlists
 
 `redirect_uri_port` *required* - Any usable host port, must match what application has been setup with
 
@@ -141,4 +141,4 @@ You will need to create an application as per this [article](https://developer.s
 
 `[spotify_playlists][enabled]` - Enables / disables inclusion of spotify playlist songs in download
 
-`[spotify_playlists][excluded]` - An array of playlists you wish to be excluded from download (case sensitive)
+`[spotify_playlists][excluded]` - An array of playlists you wish to be excluded from download (case sensitive). You can get the names by running ```python3 main.py -playlist-stats```
