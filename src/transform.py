@@ -18,77 +18,131 @@ def _verify_files():
                 json.dump({}, fp)
 
 
-def process_liked():
-    _verify_files()
+def load_json(file):
+    with open(file, mode='r', encoding='utf-8') as f:
+        ret = json.load(f)
+    return ret
 
-    with open(config["script"]["paths"]["liked_songs"], mode='r', encoding='utf-8') as f:
-        liked_songs = json.load(f)
 
-    with open(config["script"]["paths"]["processed_songs"], mode='r', encoding='utf-8') as f:
-        processed_songs = json.load(f)
+def dump_json(file, obj):
+    with open(file, mode='w', encoding='utf-8') as f:
+        json.dump(obj, f, indent=4, sort_keys=True)
 
-    i = 1
-    new_songs = 0
-    matched_songs = 0
 
-    logger.info('Starting match process')
-    for k in liked_songs.keys():
-        if k in processed_songs.keys():
-            continue
+def get_unprocessed_songs(spotify_songs, processed_songs):
+    ret = {}
+    for k in spotify_songs:
+        if k not in processed_songs:
+            ret[k] = spotify_songs[k]
+    return ret
 
-        new_songs += 1
-        song = liked_songs[k]
+
+def insert_into_processed(match_obj, processed_songs):
+    processed_song = {
+            'spotify_title': match_obj['spotify_title'],
+            'spotify_artist': match_obj['spotify_artist'],
+            'spotify_isrc': match_obj['spotify_isrc'],
+            'spotify_url': match_obj['spotify_url'],
+            'spotify_id': match_obj['spotify_id'],
+            'deezer_title': match_obj['deezer_title'],
+            'deezer_artist': match_obj['deezer_artist'],
+            'deezer_url': match_obj['deezer_url'],
+            'deezer_id': match_obj['deezer_id'],
+            'matched': match_obj['matched'],
+            'match_type': match_obj['match_type'],
+            'match_pending_download': match_obj['match_pending_download'],
+            'downloaded': match_obj['downloaded'],
+            'download_path': None,
+            'download_md5': None,
+            'download_failed': None,
+            'download_failed_reason': None
+    }
+    processed_songs[match_obj["spotify_isrc"]] = processed_song
+
+
+def match_unprocessed(unprocessed_songs, processed_songs):
+    logger.info(f'Attempting to match {len(unprocessed_songs)} Spotify songs to Deezer')
+
+    matched = 0
+    for k in unprocessed_songs:
+        song = unprocessed_songs[k]
 
         logger.debug(f'Processing: {song["track"]["name"]} - {song["track"]["artists"][0]["name"]}')
 
         result = match_isrc(song)
 
         if result[0]:
-            matched_songs += 1
-            processed_songs[song['track']['external_ids']['isrc']] = result[1]
+            insert_into_processed(result[1], processed_songs)
+            matched += 1
         else:
             logger.debug(f'Failed matching via {song["track"]["external_ids"]["isrc"]}, attempting fuzzy search')
             result = match_adv(song)
             if result[0]:
                 logger.debug(f'Matched via fuzzy search')
-                matched_songs += 1
-                processed_songs[song['track']['external_ids']['isrc']] = result[1]
+                insert_into_processed(result[1], processed_songs)
+                matched += 1
             else:
                 logger.debug(f'Failed to match via fuzzy search, not matching..')
-                processed_songs[song['track']['external_ids']['isrc']] = result[1]
+                insert_into_processed(result[1], processed_songs)
 
-        i += 1
+    logger.info(f'Matched {matched}/{len(unprocessed_songs)} new liked songs')
 
-    logger.info(f'Matched {matched_songs}/{new_songs} new liked songs')
 
-    with open(config["script"]["paths"]["processed_songs"], mode='w', encoding='utf-8') as f:
-        json.dump(processed_songs, f, indent=4, sort_keys=True)
+def process_liked():
+    _verify_files()
+
+    liked_songs = load_json(config["script"]["paths"]["liked_songs"])
+    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
+
+    unprocessed_songs = get_unprocessed_songs(liked_songs, processed_songs)
+    logger.info(f'{len(unprocessed_songs)} new songs to process')
+
+    match_unprocessed(unprocessed_songs, processed_songs)
+
+    dump_json(config["script"]["paths"]["processed_songs"], processed_songs)
 
 
 def get_tracks_to_download():
     logger.debug(f'Opening {config["script"]["paths"]["processed_songs"]}')
-    with open(config["script"]["paths"]["processed_songs"], mode='r', encoding='utf-8') as f:
-        processed_songs = json.load(f)
+    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
 
     ret = {}
     for k in processed_songs.keys():
         if "match_pending_download" in processed_songs[k]:
-            if processed_songs[k]["match_pending_download"]:
-                logger.debug(f'{k} is matched and awaiting download')
-                ret[k] = processed_songs[k].copy()
-
+            if "download_failed" in processed_songs[k]:
+                if processed_songs[k]["match_pending_download"] and not processed_songs[k]["download_failed"]:
+                    logger.debug(f'{k} is matched and awaiting download')
+                    ret[k] = processed_songs[k].copy()
+            else:
+                if processed_songs[k]["match_pending_download"]:
+                    logger.debug(f'{k} is matched and awaiting download')
+                    ret[k] = processed_songs[k].copy()
     return ret
 
 
 def set_tracks_as_downloaded(tracks):
-    with open(config["script"]["paths"]["processed_songs"], mode='r', encoding='utf-8') as f:
-        processed_songs = json.load(f)
+    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
 
     for k in tracks:
         processed_songs[k]['match_pending_download'] = False
         processed_songs[k]['downloaded'] = True
+        processed_songs[k]['download_path'] = tracks[k]['path']
+        processed_songs[k]['download_md5'] = tracks[k]['md5']
+        processed_songs[k]['download_failed'] = False
+        processed_songs[k]['download_failed_reason'] = None
 
-    with open(config["script"]["paths"]["processed_songs"], mode='w', encoding='utf-8') as f:
-        json.dump(processed_songs, f, indent=4, sort_keys=True)
+    dump_json(config["script"]["paths"]["processed_songs"], processed_songs)
 
 
+def set_tracks_as_failed_to_download(failed_tracks):
+    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
+
+    for k in failed_tracks:
+        processed_songs[k]['match_pending_download'] = True
+        processed_songs[k]['downloaded'] = False
+        processed_songs[k]['download_path'] = None
+        processed_songs[k]['download_md5'] = None
+        processed_songs[k]['download_failed'] = True
+        processed_songs[k]['download_failed_reason'] = failed_tracks[k]["status"]
+
+    dump_json(config["script"]["paths"]["processed_songs"], processed_songs)

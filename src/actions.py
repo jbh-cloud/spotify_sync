@@ -43,7 +43,7 @@ def sync_liked_custom_user(client_id, client_secret, username, liked_songs_path)
 
 
 def match_liked():
-    logger.info('Script started with -process-liked flag')
+    logger.info('Script started with -match-liked flag')
     transform.process_liked()
     logger.info('Script finished')
 

@@ -142,7 +142,7 @@ def load_liked():
 
 
 def save_liked(liked):
-    logger.info(f'Serializing {str(len(liked))} liked songs back to disk')
+    logger.debug(f'Serializing {str(len(liked))} liked songs back to disk')
     path = config['script']['paths']['liked_songs']
     with open(config['script']['paths']['liked_songs'], mode='w', encoding='utf-8') as f:
         json.dump(liked, f, indent=4, sort_keys=True)
@@ -166,7 +166,7 @@ def fetch_spotify_liked(manual_user=False):
 def merge_spotify_playlist_songs(liked_songs):
     logger.info("Fetching playlist songs")
     playlist_songs = get_all_songs_from_playlists(get_all_playlists(config['script']['spotify_playlists']['excluded']))
-    logger.info(f'{len(playlist_songs)} playlist songs')
+    logger.debug(f'{len(playlist_songs)} playlist songs')
     added_playlist_songs = 0
     for s in playlist_songs:
         if 'isrc' in s['track']['external_ids']:
@@ -197,7 +197,7 @@ def merge_offline_online_liked(offline_dict, online_dict):
 def serialize_playlist_mapping():
     path = config['script']['paths']['playlist_mapping']
     mapping = generate_playlist_songs_mapping()
-    logger.info('Serializing playlist mapping to disk')
+    logger.debug ('Serializing playlist mapping to disk')
     with open(path, mode='w', encoding='utf-8') as f:
         json.dump(mapping, f, indent=4, sort_keys=True)
 
