@@ -22,6 +22,8 @@ def check_deemix_config():
         logger.error(f'{config["deemix"]["download_path"]} must be an existing folder')
         raise Exception(f'{config["deemix"]["download_path"]} must be an existing folder')
     elif not os.path.isfile(os.path.join(config["deemix"]["config_path"], 'config.json')):
+        if '\\' in config["deemix"]["download_path"]:
+            config["deemix"]["download_path"] = config["deemix"]["download_path"].replace("\\", "/")
         config_json = json.loads(deemix_config.replace('DOWNLOAD_LOCATION_PATH', config["deemix"]["download_path"]))
         logger.info('Creating deemix config for first use')
         with open(os.path.join(config["deemix"]["config_path"], 'config.json'), mode='w', encoding='utf-8') as f:
