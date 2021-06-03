@@ -21,7 +21,7 @@ rootLogger.addHandler(consoleHandler)
 
 # File logger
 if config["logging"]["path"] == '':
-    log_file = os.path.join(os.getcwd(), 'logs', 'spotify_download.log')
+    log_file = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'logs', 'spotify_download.log'))
 else:
     log_file = config["logging"]["path"]
 
