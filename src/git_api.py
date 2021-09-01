@@ -3,6 +3,7 @@ from git import Repo
 # Local imports
 from src import config
 from src.log import rootLogger
+from src import pushover_api
 
 logger = rootLogger.getChild('GIT_API')
 config = config.load()
@@ -14,6 +15,7 @@ def assert_repo():
             assert check_repo_is_clean()
         except:
             logger.error(f'Git repo specified is not clean')
+            pushover_api.send_notification('Spotify downloader', 'Git repo specified is not clean')
             raise Exception(f'Git repo specified is not clean')
 
 
