@@ -34,7 +34,7 @@ if not os.path.exists(os.path.dirname(log_file)):
 
 fileHandler = RotatingFileHandler(
     log_file,
-    maxBytes=4000,
+    maxBytes=2097152,
     backupCount=5,
     encoding='utf-8'
 )
