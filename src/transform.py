@@ -1,35 +1,65 @@
-import src.config as config
-from src.deezer_api import match_adv, match_isrc
-import json, pathlib
-from src.log import rootLogger
+from dataclasses import dataclass
+from typing import Dict
+from tabulate import tabulate
 
-config = config.load()
+# local imports
+from src.config import load as load_config
+from src.io_ import verify_files, load_liked_songs, load_processed_songs, persist_processed_songs
+from src.log import rootLogger
+from src.spotify_ import SpotifySong
+from src.deezer_ import SongMatcher
 
 logger = rootLogger.getChild('TRANSFORM')
+config = load_config()
 
 
-def _verify_files():
-    files = [config["script"]["paths"]["liked_songs"], config["script"]["paths"]["processed_songs"]]
+@dataclass
+class ProcessedSong:
+    """Class for keeping track of an offline song."""
+    spotify_title: str = None
+    spotify_artist: str = None
+    spotify_isrc: str = None
+    spotify_url: str = None
+    spotify_id: str = None
+    deezer_title: str = None
+    deezer_artist: str = None
+    deezer_isrc: str = None
+    deezer_url: str = None
+    deezer_id: str = None
+    matched: str = None
+    match_type: str = None
+    match_message: str = None
+    match_pending_download: str = None
+    downloaded: str = None
+    download_isrc: str = None
+    download_url: str = None
+    download_path: str = None
+    download_md5: str = None
+    download_bitrate: str = None
+    download_failed: str = None
+    download_failed_reason: str = None
 
-    for f in files:
-        if not pathlib.Path(f).is_file():
-            logger.info(f'{f} not found, creating blank file')
-            with open(f, mode='w', encoding='utf-8') as fp:
-                json.dump({}, fp)
 
+def as_spotify_song(songs: Dict[str, SpotifySong]):
+    ret = {}
+    for k in songs:
+        s = SpotifySong()
+        s.from_dict(songs[k])
+        ret[k] = s
 
-def load_json(file):
-    with open(file, mode='r', encoding='utf-8') as f:
-        ret = json.load(f)
     return ret
 
 
-def dump_json(file, obj):
-    with open(file, mode='w', encoding='utf-8') as f:
-        json.dump(obj, f, indent=4, sort_keys=True)
+def as_processed_song(songs: Dict[str, ProcessedSong]):
+    ret = {}
+    for k in songs:
+        s = ProcessedSong(**songs[k])
+        ret[k] = s
+
+    return ret
 
 
-def get_unprocessed_songs(spotify_songs, processed_songs):
+def get_unprocessed_songs(spotify_songs: Dict[str, SpotifySong], processed_songs):
     ret = {}
     for k in spotify_songs:
         if k not in processed_songs:
@@ -37,112 +67,162 @@ def get_unprocessed_songs(spotify_songs, processed_songs):
     return ret
 
 
-def insert_into_processed(match_obj, processed_songs):
-    processed_song = {
-            'spotify_title': match_obj['spotify_title'],
-            'spotify_artist': match_obj['spotify_artist'],
-            'spotify_isrc': match_obj['spotify_isrc'],
-            'spotify_url': match_obj['spotify_url'],
-            'spotify_id': match_obj['spotify_id'],
-            'deezer_title': match_obj['deezer_title'],
-            'deezer_artist': match_obj['deezer_artist'],
-            'deezer_url': match_obj['deezer_url'],
-            'deezer_id': match_obj['deezer_id'],
-            'matched': match_obj['matched'],
-            'match_type': match_obj['match_type'],
-            'match_pending_download': match_obj['match_pending_download'],
-            'downloaded': match_obj['downloaded'],
-            'download_path': None,
-            'download_md5': None,
-            'download_failed': None,
-            'download_failed_reason': None
-    }
-    processed_songs[match_obj["spotify_isrc"]] = processed_song
+def process_match(matcher: SongMatcher, processed_songs, count_matched: int):
+    if matcher.match:
+        if 'link' not in matcher.match_payload:
+            logger.warning(f'[SpotifyId:{matcher.song.id_}] - Matched but response does not contain a Deezer link, unmatching..')
+            matcher.match = False
+            matcher.match_message = "Matched but response does not contain a Deezer link"
+
+    s = ProcessedSong(
+        spotify_title=matcher.song.title,
+        spotify_artist=matcher.song.artist,
+        spotify_isrc=matcher.song.isrc,
+        spotify_url=matcher.song.url,
+        spotify_id=matcher.song.id_,
+        deezer_title=matcher.match_payload['title'] if matcher.match else None,
+        deezer_artist=matcher.match_payload['artist']['name'] if matcher.match else None,
+        # deezer fuzzy search payload doesnt return isrc of matched item
+        deezer_isrc=matcher.match_payload.get('isrc') if matcher.match else None,
+        deezer_url=matcher.match_payload['link'] if matcher.match else None,
+        deezer_id=matcher.match_payload['id'] if matcher.match else None,
+        matched=matcher.match,
+        match_type=matcher.match_type,
+        match_message=matcher.match_message,
+        match_pending_download=matcher.match
+    )
+
+    processed_songs[s.spotify_id] = s
+
+    return s.matched
 
 
-def match_unprocessed(unprocessed_songs, processed_songs):
+
+def match_unprocessed(unprocessed_songs: Dict[str, SpotifySong], processed_songs):
     logger.info(f'Attempting to match {len(unprocessed_songs)} Spotify songs to Deezer')
-
     matched = 0
     for k in unprocessed_songs:
         song = unprocessed_songs[k]
-
-        logger.debug(f'Processing: {song["track"]["name"]} - {song["track"]["artists"][0]["name"]}')
-
-        result = match_isrc(song)
-
-        if result[0]:
-            insert_into_processed(result[1], processed_songs)
+        logger.debug(f'Processing: {song.title} - {song.artist}')
+        m = SongMatcher(song=song)
+        m.search()
+        if process_match(m, processed_songs, matched):
             matched += 1
-        else:
-            logger.debug(f'Failed matching via {song["track"]["external_ids"]["isrc"]}, attempting fuzzy search')
-            result = match_adv(song)
-            if result[0]:
-                logger.debug(f'Matched via fuzzy search')
-                insert_into_processed(result[1], processed_songs)
-                matched += 1
-            else:
-                logger.debug(f'Failed to match via fuzzy search, not matching..')
-                insert_into_processed(result[1], processed_songs)
 
-    logger.info(f'Matched {matched}/{len(unprocessed_songs)} new liked songs')
+    logger.info(f'Matched {matched}/{len(unprocessed_songs)} new liked song(s)')
 
 
 def process_liked():
-    _verify_files()
+    verify_files()
 
-    liked_songs = load_json(config["script"]["paths"]["liked_songs"])
-    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
+    liked_songs = as_spotify_song(load_liked_songs())
+    processed_songs = as_processed_song(load_processed_songs())
 
     unprocessed_songs = get_unprocessed_songs(liked_songs, processed_songs)
     logger.info(f'{len(unprocessed_songs)} new songs to process')
 
     match_unprocessed(unprocessed_songs, processed_songs)
+    persist_processed_songs(processed_songs)
 
-    dump_json(config["script"]["paths"]["processed_songs"], processed_songs)
 
+def get_songs_to_download():
+    logger.debug(f'Opening {config["DATA_FILES_PROCESSED_SONGS"]}')
+    processed_songs = as_processed_song(load_processed_songs())
 
-def get_tracks_to_download():
-    logger.debug(f'Opening {config["script"]["paths"]["processed_songs"]}')
-    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
-
-    ret = {}
+    ret = []
     for k in processed_songs.keys():
-        if "match_pending_download" in processed_songs[k]:
-            if "download_failed" in processed_songs[k]:
-                if processed_songs[k]["match_pending_download"] and not processed_songs[k]["download_failed"]:
-                    logger.debug(f'{k} is matched and awaiting download')
-                    ret[k] = processed_songs[k].copy()
-            else:
-                if processed_songs[k]["match_pending_download"]:
-                    logger.debug(f'{k} is matched and awaiting download')
-                    ret[k] = processed_songs[k].copy()
+        song = processed_songs[k]
+        if song.match_pending_download and not song.download_failed:
+            logger.debug(f'{k} is matched and awaiting download')
+            ret.append(processed_songs[k])
+
     return ret
 
 
-def set_tracks_as_downloaded(tracks):
-    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
-
-    for k in tracks:
-        processed_songs[k]['match_pending_download'] = False
-        processed_songs[k]['downloaded'] = True
-        processed_songs[k]['download_path'] = tracks[k]['path']
-        processed_songs[k]['download_md5'] = tracks[k]['md5']
-        processed_songs[k]['download_failed'] = False
-        processed_songs[k]['download_failed_reason'] = None
-
-    dump_json(config["script"]["paths"]["processed_songs"], processed_songs)
+def save_processed(processed):
+    logger.debug(f'Serializing {str(len(processed))} processed songs back to disk')
+    persist_processed_songs(processed)
 
 
-def set_tracks_as_failed_to_download(failed_tracks):
-    processed_songs = load_json(config["script"]["paths"]["processed_songs"])
+def persist_download_status(download_statuses):
+    processed_songs = as_processed_song(load_processed_songs())
 
-    for k in failed_tracks:
-        processed_songs[k]['match_pending_download'] = True
-        processed_songs[k]['downloaded'] = False
-        processed_songs[k]['download_path'] = None
-        processed_songs[k]['download_md5'] = None
-        processed_songs[k]['download_failed'] = True
-        processed_songs[k]['download_failed_reason'] = failed_tracks[k]["status"]
+    for k in download_statuses:
+        status = download_statuses[k]
 
-    dump_json(config["script"]["paths"]["processed_songs"], processed_songs)
+        if status.success:
+            processed_songs[k].match_pending_download = False
+            processed_songs[k].downloaded = True
+            processed_songs[k].download_isrc = status.downloaded_isrc
+            processed_songs[k].download_url = status.downloaded_url
+            processed_songs[k].download_path = status.download_path
+            processed_songs[k].download_md5 = status.md5
+            processed_songs[k].download_bitrate = status.downloaded_bitrate
+            processed_songs[k].download_failed = False
+            processed_songs[k].download_failed_reason = None
+        else:
+            processed_songs[k].match_pending_download = True
+            processed_songs[k].downloaded = False
+            processed_songs[k].download_isrc = status.downloaded_isrc
+            processed_songs[k].download_url = status.downloaded_url
+            processed_songs[k].download_path = status.download_path
+            processed_songs[k].download_md5 = status.md5
+            processed_songs[k].download_failed = True
+            processed_songs[k].download_failed_reason = "\n".join([v['message'] for v in status.errors])
+
+    save_processed(processed_songs)
+
+
+def get_failed_download_stats():
+    ret = []
+
+    processed_songs = as_processed_song(load_processed_songs())
+    for k in processed_songs:
+        song = processed_songs[k]
+        if song.download_failed:
+            ret.append({
+                'spotifyId': song.spotify_id,
+                'deezerId': song.deezer_id,
+                'title': song.deezer_title,
+                'artist': song.deezer_artist,
+                'error': song.download_failed_reason
+            })
+
+    return ret
+
+
+def get_failed_download_status_summary():
+    ret = {}
+    processed_songs = as_processed_song(load_processed_songs())
+    for k in processed_songs:
+        song = processed_songs[k]
+        if song.download_failed:
+            if song.download_failed_reason not in ret:
+                ret[song.download_failed_reason] = 1
+            else:
+                ret[song.download_failed_reason] += 1
+
+    return [{'Failed downloads': v, 'Reason': k} for k, v in ret.items()]
+
+
+def display_failed_download_stats():
+    stats = get_failed_download_status_summary()
+    # stats = get_failed_download_stats()
+    if len(stats) == 0:
+        logger.info(f'No failed downloads')
+        return
+
+    header = stats[0].keys()
+    rows = [x.values() for x in stats]
+    print()
+    print(tabulate(rows, header))
+
+
+
+
+
+
+
+
+
+

@@ -1,18 +1,16 @@
 import errno
-import logging, sys, os
+import logging
+import sys
+import os
 from logging.handlers import RotatingFileHandler
-import src.config as config
 
-config = config.load()
-
-# Validate logging level
-if config["logging"]["level"] not in ['INFO', 'DEBUG']:
-    raise Exception('Logging level should be either INFO or DEBUG')
+LOG_LEVEL = os.environ["SPOTIFY_SYNC_LOG_LEVEL"] if os.environ.get("SPOTIFY_SYNC_LOG_LEVEL") is not None else 'INFO'
+LOG_PATH = os.environ["SPOTIFY_SYNC_LOG_PATH"] if os.environ.get("SPOTIFY_SYNC_LOG_PATH") is not None else ''
 
 # Configure root logger
-logFormatter = logging.Formatter('[%(asctime)s] %(levelname)-6s %(name)-12s : %(message)s')
+logFormatter = logging.Formatter('[%(asctime)s] %(levelname)-9s %(name)-12s : %(message)s')
 rootLogger = logging.getLogger()
-rootLogger.setLevel(config["logging"]["level"])
+rootLogger.setLevel(LOG_LEVEL)
 
 # Console logger, log to stdout instead of stderr
 consoleHandler = logging.StreamHandler(sys.stdout)
@@ -20,10 +18,10 @@ consoleHandler.setFormatter(logFormatter)
 rootLogger.addHandler(consoleHandler)
 
 # File logger
-if config["logging"]["path"] == '':
-    log_file = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'logs', 'spotify_download.log'))
+if LOG_PATH == '':
+    log_file = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'logs', 'spotify_sync.log'))
 else:
-    log_file = config["logging"]["path"]
+    log_file = LOG_PATH
 
 if not os.path.exists(os.path.dirname(log_file)):
     try:
@@ -43,8 +41,9 @@ fileHandler.setFormatter(logFormatter)
 rootLogger.addHandler(fileHandler)
 
 # Set external module logging policy
-if config["logging"]["level"] == 'DEBUG':
-    logging.getLogger('urllib3').setLevel(logging.DEBUG)
+if LOG_LEVEL == 'DEBUG':
+    #logging.getLogger('urllib3').setLevel(logging.DEBUG)
+    logging.getLogger('urllib3').setLevel(logging.ERROR)
     logging.getLogger('spotipy').setLevel(logging.DEBUG)
     logging.getLogger('deemix').propagate = True
 else:

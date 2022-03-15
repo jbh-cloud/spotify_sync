@@ -1,46 +1,51 @@
 {
+    "threads": "",
     "deemix": {
-        "config_path": "D:\\source\\spotify_dl_data\\config",
-        "arl": "",
-        "download_path": "D:/deemix_Music"
+        "arl": "9fd6f15...68e755125e11b",
+        "download_path": "/home/ubuntu/spotify_music",
+        "max_bitrate": "lossless",
+        "skip_low_quality": true,
+        "strict_matching": false
     },
     "logging": {
         "level": "INFO",
         "path": ""
     },
     "spotify": {
-        "client_id": "",
-        "client_secret": "",
-        "username": "",
+        "client_id": "33...c689d",
+        "client_secret": "04c...8326a",
+        "username": "myspotifyusername",
         "scope": "user-library-read, playlist-read-private",
-        "redirect_uri_port": "9090"
+        "redirect_uri_port": "9090",
+        "playlists": {
+            "enabled": true,
+            "excluded": [
+                "Hate this playlist",
+                "Definately dont want to download these songs"
+            ]
+        }
     },
     "pushover": {
         "enabled": false,
-        "user_key": "",
-        "api_token": ""
+        "user_key": "ua...cv3",
+        "api_token": "aa6x...vyd"
     },
     "autoscan": {
         "enabled": false,
-        "endpoint": "",
-        "scan_file_parent_path": true,
-        "auth_enabled": false,
-        "username": "",
-        "password": ""
+        "endpoint": "http://my-api-endpoint.com:3030/triggers/manual",
+        "auth_enabled": true,
+        "username": "admin",
+        "password": "ThisIsNotARealPassword"
     },
     "git": {
-        "enabled": false,
-        "persistent_data_folder_path": "D:\\source\\spotify_dl_data"
+        "enabled": false
     },
-    "script": {
-        "paths": {
-            "liked_songs": "D:\\source\\spotify_dl_data\\spotify_liked_songs.json",
-            "processed_songs": "D:\\source\\spotify_dl_data\\processed_songs.json",
-            "playlist_mapping": "D:\\source\\spotify_dl_data\\playlist_mapping.json"
-        },
-        "spotify_playlists": {
-            "enabled": false,
-            "excluded": []
+    "data": {
+        "persistent_data_root": "/home/ubuntu/src/spotify_sync_data",
+        "files": {
+            "liked_songs": "spotify_liked_songs.json",
+            "processed_songs": "processed_songs.json",
+            "playlist_mapping": "playlist_mapping.json"
         }
     }
 }
