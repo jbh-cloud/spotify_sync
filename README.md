@@ -35,11 +35,11 @@ Simple usage would be..
 
 Cache Spotify OAuth token
 ```
-main.py --authorize-spotify
+python main.py -authorize-spotify
 ```
 Run script in automatic mode
 ```
-main.py --auto
+python main.py -auto
 ```
 
 Other modes..
