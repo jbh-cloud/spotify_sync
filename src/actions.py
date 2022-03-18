@@ -52,6 +52,11 @@ def match_liked():
 
 def download_missing():
     logger.info('Script started with -download-missing flag')
+
+    # Checks
+    deemix_.check_deemix_config()
+    deemix_.check_arl_valid()
+
     download.missing_tracks()
     logger.info('Script finished')
 

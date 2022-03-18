@@ -15,7 +15,7 @@ The script caches a copy of all Spotify song metadata, then attempts to match th
 ## Requirements
 1. Python 3.8 or higher (```sudo apt install python3.8 python-pip```)
 2. requirements.txt modules (see below)
-3. Deezer account (Lossless download requires Deezer Hi-Fi account)
+3. Deezer account (Free account allows 128kbps downloads, up to lossless requires Deezer Hi-Fi account)
 	
 ## Installation
 1. ```python3 -m pip install --upgrade pip```
