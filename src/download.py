@@ -23,7 +23,7 @@ def missing_tracks():
 
     logger.info(f'Downloading {len(songs)} song(s) from Deezer')
     downloader = deemix_.DeemixDownloader(
-        arl=config["DEEMIX_ARL"], config=get_deemix_config(), skip_low_quality=config['DEEMIX_SKIP_LOW_QUALITY'])
+        arl=config["DEEMIX_ARL"], deemix_config=get_deemix_config())
     downloader.download_songs(songs)
     failed_songs, succeeded_songs, reports = downloader.get_report()
     logger.info(f'Successfully downloaded {succeeded_songs}/{len(songs)}')

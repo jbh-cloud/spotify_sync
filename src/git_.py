@@ -1,3 +1,5 @@
+import sys
+
 from git import Repo
 
 # Local imports
@@ -16,7 +18,7 @@ def assert_repo():
         except:
             logger.error(f'Git repo specified is not clean')
             pushover_.send_notification('Spotify downloader', 'Git repo specified is not clean')
-            raise Exception(f'Git repo specified is not clean')
+            sys.exit(1)
 
 
 def repo_is_clean():

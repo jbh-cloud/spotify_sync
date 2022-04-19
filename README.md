@@ -1,5 +1,6 @@
 # spotify_sync
 ![](run_example.gif)
+
 ## Table of contents
 * [Introduction](#Introduction)
 * [Requirements](#Requirements)
@@ -15,7 +16,8 @@ The script caches a copy of all Spotify song metadata, then attempts to match th
 ## Requirements
 1. Python 3.8 or higher (```sudo apt install python3.8 python-pip```)
 2. requirements.txt modules (see below)
-3. Deezer account (Free account allows 128kbps downloads, up to lossless requires Deezer Hi-Fi account)
+3. Spotify account 
+4. Deezer account (Free account allows 128kbps downloads, up to lossless requires Deezer Hi-Fi account)
 	
 ## Installation
 1. ```python3 -m pip install --upgrade pip```
@@ -99,9 +101,9 @@ A free Deezer account is required, I would suggest creating a burner account.
 
 `download_path` *required* - Path that Deemix will download into
 
-`max_bitrate` *required* - The highest download quality to attempt. Must be one of 'lossless', '320', '128'. Lossless requires a Deezer Hi-Fi account.
+`max_bitrate` *required* - The highest download quality to attempt. Must be one of 'lossless', '320', '128'. 'Lossless' & '320' require a Deezer Hi-Fi account.
 
-`skip_low_quality` *required* - If true and max_bitrate == 'lossless', checks that the Deezer account has privileges to stream Lossless audio. If not, it will not attempt to continue.
+`skip_low_quality` *required* - If true and max_bitrate > '128', checks that the Deezer account has privileges to stream the relevant quality. If not it will fail fast (saving you from downloading low quality music). This is especially useful if you rotate Deezer Hi-Fi free trials and don't want to accidentally download 128kbps once your trial has ended.
 
 `strict_matching` *required* If true, it will ONLY successfully match a Spotify song to Deezer via it's ISRC. Setting to false allows fallback to Title - Artist - Album search.
 

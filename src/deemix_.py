@@ -1,3 +1,4 @@
+import sys
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import os
@@ -93,20 +94,16 @@ class DownloadStatus:
 
 
 class DeemixDownloader:
-    def __init__(self, arl: str, config: dict, skip_low_quality=False):
+    def __init__(self, arl: str, deemix_config: dict):
         self.dz = Deezer()
-        self.config = config
+        self.config = deemix_config
         self.deezer_logged_in = self.dz.login_via_arl(arl)
-        self.skip_low_quality = skip_low_quality
+        self.skip_low_quality = config['DEEMIX_SKIP_LOW_QUALITY']
+        self.max_bitrate = config['DEEMIX_MAX_BITRATE']
         self.songs_to_download: List[ProcessedSong] = []
         self.download_report: Dict[str, DownloadStatus] = {}
 
-    def download_wrapper(self, data):
-        index = data['index'] + 1
-        num_urls_to_download = data['num_urls_to_download']
-        song = data['song']
-        download_obj = data['download_obj']
-
+    def download_wrapper(self, index, num_urls_to_download, song, download_obj):
         logger = DownloadLogger(
             index=index, total=num_urls_to_download, song=song)
         listener = LogListener()
@@ -120,17 +117,23 @@ class DeemixDownloader:
     def download_songs(self, songs: List[ProcessedSong]):
         self.songs_to_download = songs
 
-        if self.skip_low_quality and not self.dz.current_user.get('can_stream_lossless'):
-            logger.info(
-                f'SKIP_LOW_QUALITY is specified and unable to stream FLAC, stopping download')
-            logger.info(
-                f'If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi')
-            raise
-
         if not self.deezer_logged_in:
             logger.error(
                 'Failed to login with arl, you may need to refresh it')
-            raise
+            sys.exit(1)
+
+        if self.skip_low_quality and self.max_bitrate in ['lossless', '320']:
+            if self.max_bitrate == 'lossless' and not self.dz.current_user.get('can_stream_lossless'):
+                logger.info(
+                    f'SKIP_LOW_QUALITY is specified and unable to stream FLAC, stopping script! '
+                    f'If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi')
+                sys.exit(1)
+
+            if self.max_bitrate == '320' and not self.dz.current_user.get('can_stream_hq'):
+                logger.info(
+                    f'SKIP_LOW_QUALITY is specified and unable to stream 320, stopping script1 '
+                    f'If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi')
+                sys.exit(1)
 
         logger.info(f'Gathering song information in preparation for download..')
         download_objs = {v.spotify_id: {'song': v, 'download_obj': generateDownloadObject(
@@ -141,12 +144,7 @@ class DeemixDownloader:
         with ThreadPoolExecutor(threads) as executor:
             for i, k in enumerate(download_objs):
                 v = download_objs[k]
-                executor.submit(self.download_wrapper, {
-                    'index': i,
-                    'num_urls_to_download': num_urls_to_download,
-                    'song': v['song'],
-                    'download_obj': v['download_obj']
-                })
+                executor.submit(self.download_wrapper, i+1, num_urls_to_download, v['song'], v['download_obj'])
 
     @staticmethod
     def download_skipped(listener: LogListener):
@@ -160,7 +158,9 @@ class DeemixDownloader:
 
     def update_download_report(self, download_object, requested_song: ProcessedSong, listener: LogListener, dl_logger):
         if not isinstance(download_object, Single):
-            raise Exception("Not a Single, unexpected type!", download_object)
+            logger.error("Not a Single, unexpected type!", type(download_object))
+            sys.exit(1)
+
         errors = None
         md5 = ""
         status = False
@@ -263,7 +263,7 @@ def check_deemix_config():
     if os.path.isfile(config["DEEMIX_DOWNLOAD_PATH"]):
         logger.error(
             f'{config["DEEMIX_DOWNLOAD_PATH"]} is a file, must not exist or be an existent folder')
-        raise
+        sys.exit(1)
 
     if not os.path.isdir(config["DEEMIX_DOWNLOAD_PATH"]):
         logger.warning(
@@ -278,7 +278,7 @@ def check_deemix_config():
     if config["DEEMIX_MAX_BITRATE"] not in accepted_bitrates:
         logger.error(
             f'{config["DEEMIX_MAX_BITRATE"]} must be one of {",".join(accepted_bitrates)}')
-        raise
+        sys.exit(1)
 
 
 def check_arl_valid():
@@ -295,11 +295,10 @@ def check_arl_valid():
             logger.debug(f'Login successful')
             arl_valid = True
         else:
-            logger.error(f'Login unsuccessful, raising exception')
+            logger.error(f'Failed to login to Deezer with arl, you may need to refresh it')
             pushover_.send_notification(
                 'Spotify downloader', 'Failed to validate arl')
-            raise Exception(
-                'Failed to login with arl, you may need to refresh it')
+            sys.exit(1)
 
 
 def get_deemix_config():

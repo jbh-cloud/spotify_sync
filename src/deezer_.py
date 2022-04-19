@@ -11,7 +11,7 @@ from src.log import rootLogger
 logger = rootLogger.getChild('DEEZER')
 config = load_config()
 
-# load Deezer and login (for downloads), API is unauthenicated
+# load Deezer and login (for matches), API is unauthenticated
 client = Deezer.Deezer()
 
 
