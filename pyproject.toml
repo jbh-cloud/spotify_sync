@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "spotify_sync"
+name = "spot_sync"
 version = "1.0.0"
 description = "A schedulable, configurable CLI downloader for Spotify accounts"
 authors = ["JBH <admin@jbh.cloud>"]
@@ -7,6 +7,9 @@ license = "MIT"
 readme = "README.md"
 documentation = "https://docs.spotify-sync.jbh.cloud"
 repository = "https://github.com/jbh-cloud/spotify_sync"
+packages = [
+    { include = "spotify_sync" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"

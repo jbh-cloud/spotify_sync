@@ -1,5 +1,5 @@
 # spotify_sync
-[![](https://img.shields.io/pypi/pyversions/spotify_sync)](https://pypi.org/project/spotify-sync/)
+[![](https://img.shields.io/pypi/pyversions/spot_sync)](https://pypi.org/project/spotify-sync/)
 [![](https://img.shields.io/badge/docs-%20-yellow)](https://docs.spotify-sync.jbh.cloud/)
 [![](https://img.shields.io/github/license/jbh-cloud/spotify_sync)](https://github.com/jbh-cloud/spotify_sync/blob/main/LICENSE.md)
 ![](https://img.shields.io/github/stars/jbh-cloud/spotify_sync?style=social)
@@ -49,7 +49,7 @@ Run in automatic mode
 spotify_sync run auto --profile myFirstProfile
 ```
 
-### Documentation
+## Documentation
 
 Further configuration is required, details for which can be found at the [docs](https://docs.spotify-sync.jbh.cloud/).
 
