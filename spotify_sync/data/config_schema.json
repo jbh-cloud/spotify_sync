@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "threads": {
+      "type": "string"
+    },
+    "deemix": {
+      "type": "object",
+      "properties": {
+        "arl": {
+          "type": "string"
+        },
+        "download_path": {
+          "type": "string"
+        },
+        "max_bitrate": {
+          "type": "string"
+        },
+        "skip_low_quality": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "arl",
+        "download_path",
+        "max_bitrate",
+        "skip_low_quality"
+      ]
+    },
+    "spotify": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "redirect_uri_port": {
+          "type": "string"
+        },
+        "playlists": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "owner_only": {
+              "type": "boolean"
+            },
+            "excluded": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "enabled",
+            "excluded"
+          ]
+        }
+      },
+      "required": [
+        "client_id",
+        "client_secret",
+        "username",
+        "scope",
+        "redirect_uri_port",
+        "playlists"
+      ]
+    },
+    "pushover": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "user_key": {
+          "type": "string"
+        },
+        "api_token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "user_key",
+        "api_token"
+      ]
+    },
+    "autoscan": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "auth_enabled": {
+          "type": "boolean"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "endpoint",
+        "auth_enabled",
+        "username",
+        "password"
+      ]
+    }
+  },
+  "required": [
+    "threads",
+    "deemix",
+    "spotify",
+    "pushover",
+    "autoscan"
+  ]
+}
