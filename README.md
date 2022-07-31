@@ -32,7 +32,7 @@ spotify_sync is a CLI app written in Python that allows you to download songs fr
 ## Install
 
 ```
-python3 -m pip install -U spotify_sync
+python3 -m pip install -U spot_sync
 ```
 
 ## Usage
