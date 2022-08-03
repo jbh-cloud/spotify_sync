@@ -29,7 +29,7 @@ class DownloadService:
     def preflight(self) -> None:
         helper = DeemixHelper(self.config)
         if not helper.arl_valid():
-            self._pushover.send_message("Spotify downloader", "Failed to validate arl")
+            self._pushover.send_message("Failed to validate arl")
             sys.exit(1)
 
         helper.check_deemix_config()
@@ -123,8 +123,6 @@ class DownloadService:
 
     def download_missing_tracks(self) -> None:
         songs = self.get_songs_to_download()
-
-        self._logger.info(f"{len(songs)} tracks pending download")
         if not songs:
             return
 

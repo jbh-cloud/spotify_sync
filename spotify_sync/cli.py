@@ -34,11 +34,13 @@ class SpotifySyncApp:
         from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
+        pushover = PushoverClient(self.config)
+        pushover.send_message("auto started")
 
         self._logger.info("Script started with auto command")
 
         pd_svc = PersistentDataService(self.config)
-        pushover = PushoverClient(self.config)
+
         spotify_svc = SpotifyService(self.config, pd_svc)
         match_svc = MatchService(self.config, pd_svc)
         download_svc = DownloadService(self.config, pd_svc, pushover)
@@ -47,8 +49,6 @@ class SpotifySyncApp:
         # Checks
         download_svc.preflight()
 
-        pushover.send_message(f"spotify_sync", "Script started with auto command")
-
         spotify_svc.sync()
         match_svc.process_spotify()
         download_svc.download_missing_tracks()
@@ -56,18 +56,20 @@ class SpotifySyncApp:
 
         if len(download_svc.downloaded_song_paths) >= 1:
             pushover.send_message(
-                "spotify_sync",
-                f"Successfully downloaded {len(download_svc.downloaded_song_paths)} new songs(s)",
+                f"Successfully downloaded {len(download_svc.downloaded_song_paths)} new songs(s)"
             )
-        pushover.send_message("spotify_sync", f"Script finished")
+        pushover.send_message(f"finished")
         self._logger.info("Script finished")
         sys.exit(0)
 
     def sync_spotify(self):
         from spotify_sync.io_ import PersistentDataService
         from spotify_sync.spotify_ import SpotifyService
+        from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
+        pushover = PushoverClient(self.config)
+        pushover.send_message("sync-spotify started")
 
         self._logger.info("Script started with sync-spotify command")
 
@@ -76,14 +78,18 @@ class SpotifySyncApp:
 
         spotify_svc.sync()
 
+        pushover.send_message(f"finished")
         self._logger.info("Script finished")
         sys.exit(0)
 
     def match_spotify(self):
         from spotify_sync.io_ import PersistentDataService
         from spotify_sync.match import MatchService
+        from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
+        pushover = PushoverClient(self.config)
+        pushover.send_message("match-spotify started")
 
         self._logger.info("Script started with match-spotify command")
 
@@ -92,6 +98,7 @@ class SpotifySyncApp:
 
         match_svc.process_spotify()
 
+        pushover.send_message(f"finished")
         self._logger.info("Script finished")
         sys.exit(0)
 
@@ -101,6 +108,8 @@ class SpotifySyncApp:
         from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
+        pushover = PushoverClient(self.config)
+        pushover.send_message("download-missing started")
 
         self._logger.info("Script started with download-missing command")
 
@@ -112,6 +121,8 @@ class SpotifySyncApp:
         download_svc.preflight()
 
         download_svc.download_missing_tracks()
+
+        pushover.send_message(f"finished")
         self._logger.info("Script finished")
         sys.exit(0)
 

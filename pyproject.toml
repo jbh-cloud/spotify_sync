@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spot_sync"
-version = "1.0.0"
+version = "1.0.1"
 description = "A schedulable, configurable CLI downloader for Spotify accounts"
 authors = ["JBH <admin@jbh.cloud>"]
 license = "MIT"

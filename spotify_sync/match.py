@@ -170,9 +170,11 @@ class MatchService:
         return s.matched
 
     def _match_unprocessed(self):
-        self._logger.info(
-            f"Attempting to match {len(self.unprocessed)} Spotify songs to Deezer"
-        )
+        msg = f"Attempting to match {len(self.unprocessed)} Spotify songs to Deezer"
+        if len(self.unprocessed) > 500:
+            msg = msg + ", this could take some time.."
+
+        self._logger.info(msg)
 
         matchers = [SongMatcher(song=song) for song in self.unprocessed.values()]
         with ThreadPoolExecutor(self.config.data["THREADS"]) as executor:

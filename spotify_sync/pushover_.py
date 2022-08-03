@@ -22,6 +22,13 @@ class PushoverClient:
         else:
             self.valid = True
 
+    def _get_title(self):
+        return (
+            f'spotify_sync - {self.config.data["SPOTIFY_USERNAME"]}'
+            if self.config.profile is None
+            else f"spotify_sync - profile: {self.config.profile}"
+        )
+
     def initialize(self):
         if self.config is not None and self.config.data["PUSHOVER_ENABLED"]:
             self.enabled = True
@@ -29,10 +36,10 @@ class PushoverClient:
             self._user = self._app.get_user(self.config.data["PUSHOVER_USER_KEY"])
             self._validate()
 
-    def send_message(self, title: str, message: str):
+    def send_message(self, message: str):
         if self.enabled:
             if self.valid:
-                self._user.send_message(title=title, message=message)
+                self._user.send_message(title=self._get_title(), message=message)
             else:
                 self._logger.warning(
                     f"Pushover details are invalid, unable to send: {message}"
