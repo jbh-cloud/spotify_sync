@@ -5,6 +5,9 @@
     "threads": {
       "type": "string"
     },
+    "anon_metrics_enable": {
+      "type": "boolean"
+    },
     "deemix": {
       "type": "object",
       "properties": {
@@ -126,6 +129,7 @@
   },
   "required": [
     "threads",
+    "anon_metrics_enable",
     "deemix",
     "spotify",
     "pushover",
