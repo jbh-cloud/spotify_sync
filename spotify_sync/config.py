@@ -60,6 +60,9 @@ class ConfigCache:
         c_loader = ConfigLoader(config_file=Path(path))
         if not c_loader.is_valid:
             print(f"Config validation error: {c_loader.validation_msg}")
+            print(
+                f"Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+            )
             sys.exit(1)
 
         # copy config to correct location
@@ -121,7 +124,7 @@ class ConfigCache:
         for p in self.profiles:
             c_loader = ConfigLoader(profile=p)
             conf = c_loader.load()
-            pd_root = PersistentDataService(Config(p.name, p.path, conf)).root
+            pd_root = PersistentDataService(Config(p.name, p.path, conf)).user_root
             summary_data.append(
                 [
                     p.name,
@@ -221,6 +224,7 @@ class ConfigLoader:
         config = config_example
 
         config["threads"] = self._config["threads"]
+        config["anon_metrics_enable"] = True
         config["deemix"]["arl"] = self._config["deemix"]["arl"]
         config["deemix"]["download_path"] = self._config["deemix"]["download_path"]
         config["deemix"]["max_bitrate"] = self._config["deemix"]["max_bitrate"]
@@ -272,9 +276,12 @@ class ConfigLoader:
                 raise Exception(ex)
 
             self._validate(self._config)
-            if not self.is_valid:
+            if not self.is_valid and not self._attempt_update_schema():
                 print(f"Config for profile {self.profile.name} is not valid")
                 print(f"Validation error: {self.validation_msg}")
+                print(
+                    f"Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+                )
                 sys.exit(1)
 
             self._config["THREADS"] = self._get_threads()
@@ -288,9 +295,12 @@ class ConfigLoader:
                 raise Exception(ex)
 
             self._validate(self._config)
-            if not self.is_valid:
+            if not self.is_valid and not self._attempt_update_schema():
                 print(f"Specified config is not valid")
                 print(f"Validation error: {self.validation_msg}")
+                print(
+                    f"Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+                )
                 sys.exit(1)
 
             self._get_threads()
@@ -330,8 +340,19 @@ class ConfigLoader:
             self.validation_msg = err.message
 
     @staticmethod
-    def _flatten_settings(data: dict):
+    def _flatten_settings(data: dict) -> dict:
         return {k.upper(): v for k, v in dict(FlatDict(data, delimiter="_")).items()}
+
+    def _attempt_update_schema(self) -> bool:
+        if self.validation_msg == "'anon_metrics_enable' is a required property":
+            temp_config = add_metrics_to_config(self._config)
+            self._validate(temp_config)
+            if self.is_valid:
+                self._config = temp_config
+                dump_json(self.config_file or self.profile.path, self._config)
+                return True
+
+        return False
 
 
 def load() -> Config:
@@ -365,3 +386,8 @@ def load() -> Config:
 def set_env(input_value: str, env_name: str) -> None:
     if input_value is not None:
         os.environ[env_name] = input_value
+
+
+def add_metrics_to_config(config) -> dict:
+    config["anon_metrics_enable"] = False
+    return config
