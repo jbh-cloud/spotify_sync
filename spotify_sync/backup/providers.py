@@ -197,15 +197,10 @@ class FileSystemBackupProvider(BackupProvider):
     def backup(self, out_dir: Union[str, None], snapshot: BackupSnapshot):
         self.snapshot = snapshot
         try:
-            export_fn = (
-                Path(os.getcwd())
-                if out_dir is None
-                else Path(out_dir)
-                / (
-                    "spotify_sync_backup_"
-                    + datetime.utcnow().strftime("%Y-%m-%dT%H%M%S")
-                    + ".zip"
-                )
+            export_fn = (Path(os.getcwd()) if out_dir is None else Path(out_dir)) / (
+                "spotify_sync_backup_"
+                + datetime.utcnow().strftime("%Y-%m-%dT%H%M%S")
+                + ".zip"
             )
             self.add_files_to_zip(export_fn)
             print(f"Successfully backed up. {export_fn}")

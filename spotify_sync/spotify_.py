@@ -25,14 +25,14 @@ class SpotifyService:
         self._preflight()
         cached = self.pd_svc.load_spotify_songs()
         online = self._fetch_liked()
-
         liked = self._merge_liked(cached, online)
 
+        mapping = {}
         if self.config.data["SPOTIFY_PLAYLISTS_ENABLED"]:
             liked, playlists = self._merge_playlist_songs(liked)
             mapping = self._generate_playlist_songs_mapping(playlists)
-            self.pd_svc.persist_playlist_mapping(mapping)
 
+        self.pd_svc.persist_playlist_mapping(mapping)
         self.pd_svc.persist_spotify_songs(liked)
 
     def cache_spotify_auth(self):
@@ -128,19 +128,14 @@ class SpotifyService:
         return songs, playlists
 
     def _get_oauth(self) -> SpotifyOAuth:
-        handler = CacheFileHandler(
-            cache_path=self.pd_svc.get_spotify_oauth(),
-            username=self.config.data["SPOTIFY_USERNAME"],
-        )
+        handler = CacheFileHandler(cache_path=self.pd_svc.get_spotify_oauth())
 
         return SpotifyOAuth(
             open_browser=False,
-            # username=self.config.data["SPOTIFY_USERNAME"],
             scope=self.config.data["SPOTIFY_SCOPE"],
             client_id=self.config.data["SPOTIFY_CLIENT_ID"],
             client_secret=self.config.data["SPOTIFY_CLIENT_SECRET"],
             redirect_uri=f'http://127.0.0.1:{self.config.data["SPOTIFY_REDIRECT_URI_PORT"]}',
-            # cache_path=self.pd_svc.get_spotify_oauth(),
             cache_handler=handler,
         )
 

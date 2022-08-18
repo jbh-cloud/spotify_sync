@@ -58,7 +58,7 @@ def _setup_external_logging() -> None:
     if LOG_LEVEL == "DEBUG":
         # logging.getLogger('urllib3').setLevel(logging.DEBUG)
         logging.getLogger("urllib3").setLevel(logging.ERROR)
-        logging.getLogger("spotipy").setLevel(logging.DEBUG)
+        logging.getLogger("spotipy").setLevel(logging.INFO)
         logging.getLogger("deemix").propagate = True
     else:
         # Decrease modules logging
