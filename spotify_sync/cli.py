@@ -2,16 +2,19 @@
 
 import sys
 
-from spotify_sync.common import get_temp_file, get_temp_fn, dump_json
+from spotify_sync.common import get_temp_fn, dump_json
+from spotify_sync.dataclasses import Config
 
 
 class SpotifySyncApp:
     def __init__(self):
         from spotify_sync.config import ConfigCache
 
-        self.config = None
+        self.config: Config = None
         self.cc = ConfigCache()
+        self._metrics = None
         self._logger = None
+        self.pushover = None
 
     def authorize_spotify(self):
         from spotify_sync.io_ import PersistentDataService
@@ -31,19 +34,16 @@ class SpotifySyncApp:
         from spotify_sync.match import MatchService
         from spotify_sync.autoscan_ import AutoScanService
         from spotify_sync.download import DownloadService
-        from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
-        pushover = PushoverClient(self.config)
-        pushover.send_message("auto started")
 
-        self._logger.info("Script started with auto command")
+        self.log("Script started with auto command")
+        self.pushover.send_message("auto started")
 
         pd_svc = PersistentDataService(self.config)
-
         spotify_svc = SpotifyService(self.config, pd_svc)
         match_svc = MatchService(self.config, pd_svc)
-        download_svc = DownloadService(self.config, pd_svc, pushover)
+        download_svc = DownloadService(self.config, pd_svc, self.pushover)
         autoscan_svc = AutoScanService(self.config)
 
         # Checks
@@ -55,75 +55,69 @@ class SpotifySyncApp:
         autoscan_svc.scan(download_svc.downloaded_song_paths)
 
         if len(download_svc.downloaded_song_paths) >= 1:
-            pushover.send_message(
+            self.pushover.send_message(
                 f"Successfully downloaded {len(download_svc.downloaded_song_paths)} new songs(s)"
             )
-        pushover.send_message(f"finished")
-        self._logger.info("Script finished")
+
+        self.pushover.send_message(f"auto finished")
+        self.log("Script finished")
         sys.exit(0)
 
     def sync_spotify(self):
         from spotify_sync.io_ import PersistentDataService
         from spotify_sync.spotify_ import SpotifyService
-        from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
-        pushover = PushoverClient(self.config)
-        pushover.send_message("sync-spotify started")
 
-        self._logger.info("Script started with sync-spotify command")
+        self.log("Script started with sync-spotify command")
+        self.pushover.send_message("sync-spotify started")
 
         pd_svc = PersistentDataService(self.config)
         spotify_svc = SpotifyService(self.config, pd_svc)
 
         spotify_svc.sync()
 
-        pushover.send_message(f"finished")
-        self._logger.info("Script finished")
+        self.pushover.send_message(f"sync-spotify finished")
+        self.log("Script finished")
         sys.exit(0)
 
     def match_spotify(self):
         from spotify_sync.io_ import PersistentDataService
         from spotify_sync.match import MatchService
-        from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
-        pushover = PushoverClient(self.config)
-        pushover.send_message("match-spotify started")
 
-        self._logger.info("Script started with match-spotify command")
+        self.log("Script started with match-spotify command")
+        self.pushover.send_message("match-spotify started")
 
         pd_svc = PersistentDataService(self.config)
         match_svc = MatchService(self.config, pd_svc)
 
         match_svc.process_spotify()
 
-        pushover.send_message(f"finished")
-        self._logger.info("Script finished")
+        self.pushover.send_message(f"match-spotify finished")
+        self.log("Script finished")
         sys.exit(0)
 
     def download_missing(self):
         from spotify_sync.io_ import PersistentDataService
         from spotify_sync.download import DownloadService
-        from spotify_sync.pushover_ import PushoverClient
 
         self._setup()
-        pushover = PushoverClient(self.config)
-        pushover.send_message("download-missing started")
 
-        self._logger.info("Script started with download-missing command")
+        self.log("Script started with download-missing command")
+        self.pushover.send_message("download-missing started")
 
         pd_svc = PersistentDataService(self.config)
-        pushover = PushoverClient(self.config)
-        download_svc = DownloadService(self.config, pd_svc, pushover)
+        download_svc = DownloadService(self.config, pd_svc, self.pushover)
 
         # Checks
         download_svc.preflight()
 
         download_svc.download_missing_tracks()
 
-        pushover.send_message(f"finished")
-        self._logger.info("Script finished")
+        self.pushover.send_message(f"download-missing finished")
+        self.log("Script finished")
         sys.exit(0)
 
     def scan(self, paths):
@@ -187,7 +181,6 @@ class SpotifySyncApp:
 
     @staticmethod
     def migrate_config():
-        import json
         import os
         from pathlib import Path
 
@@ -268,6 +261,11 @@ class SpotifySyncApp:
         except:
             raise
 
+    def log(self, message):
+        print(message) if self._logger is None else self._logger.info(message)
+        if self.config is not None and self._metrics is not None:
+            self._metrics.notify(message)
+
     @staticmethod
     def local_restore(zip_file: str, force: bool, new_profile: str):
         from pathlib import Path
@@ -303,7 +301,18 @@ class SpotifySyncApp:
         self._logger = get_logger().getChild("SpotifySync")
 
     def _setup(self, logger=True):
+        from spotify_sync.pushover_ import PushoverClient
+
         self._load_config()
         if logger:
             self._setup_logger()
+            self._setup_metrics_if_enabled(self.config)
+            self.pushover = PushoverClient(self.config)
             self._notify_user_config()
+
+    def _setup_metrics_if_enabled(self, config: Config):
+        from spotify_sync.metrics import MetricsService
+        from spotify_sync.io_ import PersistentDataService
+
+        if config.data["ANON_METRICS_ENABLE"]:
+            self._metrics = MetricsService(PersistentDataService(config))

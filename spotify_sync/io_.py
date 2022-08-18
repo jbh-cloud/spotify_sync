@@ -1,6 +1,7 @@
 import json
+import uuid
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Union
 
 # local imports
 from spotify_sync.appdirs_ import DATA
@@ -12,8 +13,10 @@ from spotify_sync.errors import SnapshotFileNotExists
 
 class PersistentDataService:
     def __init__(self, app_config: Config):
-        self.config = app_config
-        self.root: Path = self._ensure_root_dir(app_config)
+        self.config: Config = app_config
+        self.root: Path = Path(DATA)
+        self.user_root: Path = self._get_user_root_dir(app_config)
+        self._generate_machine_id()
 
     def verify_files(self):
         files = [self.get_spotify_songs_path(), self.get_processed_songs_path()]
@@ -79,30 +82,44 @@ class PersistentDataService:
         return snapshot
 
     def get_spotify_songs_path(self) -> Path:
-        return self.root / f'spotify-{self.config.data["SPOTIFY_USERNAME"]}.json'
+        return self.user_root / f'spotify-{self.config.data["SPOTIFY_USERNAME"]}.json'
 
     def get_processed_songs_path(self) -> Path:
-        return self.root / f'processed-{self.config.data["SPOTIFY_USERNAME"]}.json'
+        return self.user_root / f'processed-{self.config.data["SPOTIFY_USERNAME"]}.json'
 
     def get_playlist_mapping_path(self) -> Path:
         return (
-            self.root / f'playlist-mapping-{self.config.data["SPOTIFY_USERNAME"]}.json'
+            self.user_root
+            / f'playlist-mapping-{self.config.data["SPOTIFY_USERNAME"]}.json'
         )
 
     def get_spotify_oauth_path(self) -> Path:
         return (
-            self.root / f'.spotify-oauth-cache-{self.config.data["SPOTIFY_USERNAME"]}'
+            self.user_root
+            / f'.spotify-oauth-cache-{self.config.data["SPOTIFY_USERNAME"]}'
         )
 
     def get_log_path(self) -> Path:
-        return self.root / "logs" / "spotify_sync.log"
+        return self.user_root / "logs" / "spotify_sync.log"
 
     def persist_playlist_mapping(self, mapping):
         file = Path(self.get_playlist_mapping_path())
         dump_json(file, mapping)
 
+    def get_anon_machine_id(self) -> Union[str, None]:
+        try:
+            return load_json(self.root / ".machine.json")["id"]
+        except:
+            return None
+
+    def _generate_machine_id(self):
+        if not (self.root / ".machine.json").exists():
+            dump_json(
+                self.root / ".machine.json", {"id": str(uuid.uuid4())}, hidden=True
+            )
+
     @staticmethod
-    def _ensure_root_dir(config: Config) -> Path:
+    def _get_user_root_dir(config: Config) -> Path:
         if config.profile is not None:
             root = Path(DATA) / (config.data["SPOTIFY_USERNAME"] + f"_{config.profile}")
         else:

@@ -1,5 +1,6 @@
 {
     "threads": "",
+    "anon_metrics_enable": true,
     "deemix": {
         "arl": "9fd6f15...68e755125e11b",
         "download_path": "/home/ubuntu/spotify_music",

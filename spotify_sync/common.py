@@ -1,3 +1,5 @@
+import base64
+import hmac
 import json
 import subprocess
 import sys
@@ -77,9 +79,17 @@ def dump_json(file: Path, data: Any, hidden=False, sort_keys=True) -> None:
         set_hidden_attribute(file, mode="hide")
 
 
-def set_hidden_attribute(file: Path, mode: str):
+def set_hidden_attribute(file: Path, mode: str) -> None:
     assert mode in ["hide", "unhide"]
     if sys.platform.startswith("win32") and mode == "hide":
         subprocess.check_call(["attrib", "+H", file])
     elif sys.platform.startswith("win32") and mode == "unhide":
         subprocess.check_call(["attrib", "-H", file])
+
+
+def hash_string(known_str: str, str_to_hash: str) -> str:
+    key = str_to_hash.encode("utf-8")
+    dig = hmac.new(
+        key=key, msg=known_str.encode("utf-8"), digestmod=hashlib.sha256
+    ).digest()
+    return base64.b64encode(dig).decode()  # py3k-mode
