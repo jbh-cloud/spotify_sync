@@ -12,7 +12,7 @@
         "client_id": "",
         "client_secret": "",
         "username": "",
-        "scope": "user-library-read, playlist-read-private",
+        "scope": "user-library-read, playlist-read-private, playlist-read-collaborative",
         "redirect_uri_port": "9090",
         "playlists": {
             "enabled": false,
