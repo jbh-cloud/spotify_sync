@@ -51,11 +51,16 @@ class SpotifyService:
     def display_playlist_stats(self):
         self._preflight()
         stats = self._get_playlist_stats()
+        if len(stats) == 0:
+            print("No playlists found")
+            sys.exit(0)
+
         header = stats[0].keys()
         rows = [x.values() for x in stats]
         print()
         print(tabulate(rows, header))
         print()
+        sys.exit(0)
 
     def _get_playlist_stats(self) -> List[dict]:
         ret = []
