@@ -26,7 +26,7 @@ class SpotifySyncApp:
         spotify_svc = SpotifyService(self.config, pd_svc)
 
         spotify_svc.cache_spotify_auth()
-        print(f"Successfully cached Spotify OAuth token!")
+        print("Successfully cached Spotify OAuth token!")
 
     def auto(self):
         from spotify_sync.io_ import PersistentDataService
@@ -59,7 +59,7 @@ class SpotifySyncApp:
                 f"Successfully downloaded {len(download_svc.downloaded_song_paths)} new songs(s)"
             )
 
-        self.pushover.send_message(f"auto finished")
+        self.pushover.send_message("auto finished")
         self.log("Script finished")
         sys.exit(0)
 
@@ -77,7 +77,7 @@ class SpotifySyncApp:
 
         spotify_svc.sync()
 
-        self.pushover.send_message(f"sync-spotify finished")
+        self.pushover.send_message("sync-spotify finished")
         self.log("Script finished")
         sys.exit(0)
 
@@ -95,7 +95,7 @@ class SpotifySyncApp:
 
         match_svc.process_spotify()
 
-        self.pushover.send_message(f"match-spotify finished")
+        self.pushover.send_message("match-spotify finished")
         self.log("Script finished")
         sys.exit(0)
 
@@ -116,7 +116,7 @@ class SpotifySyncApp:
 
         download_svc.download_missing_tracks()
 
-        self.pushover.send_message(f"download-missing finished")
+        self.pushover.send_message("download-missing finished")
         self.log("Script finished")
         sys.exit(0)
 
@@ -187,11 +187,12 @@ class SpotifySyncApp:
         from spotify_sync.config import ConfigLoader
 
         if os.environ.get("MANUAL_CONFIG_FILE") is None:
-            print(f"Must provide a config file to migrate")
+            print("Must provide a config file to migrate")
             sys.exit(1)
 
         cl = ConfigLoader(
-            config_file=Path(os.environ["MANUAL_CONFIG_FILE"]), legacy_mode=True
+            config_file=Path(os.environ["MANUAL_CONFIG_FILE"]),
+            legacy_mode=True,
         )
         new_config = cl.migrate_from_legacy_schema()
 
@@ -212,7 +213,7 @@ class SpotifySyncApp:
         from spotify_sync.common import get_temp_file
 
         if os.environ.get("MANUAL_CONFIG_FILE") is None:
-            print(f"Must provide a config file to migrate")
+            print("Must provide a config file to migrate")
             sys.exit(1)
 
         cfg_file = Path(os.environ["MANUAL_CONFIG_FILE"])
@@ -250,15 +251,17 @@ class SpotifySyncApp:
         self._setup(logger=False)
 
         try:
-            snapshot = PersistentDataService(self.config).gather_snapshot_files()
+            snapshot = PersistentDataService(
+                self.config
+            ).gather_snapshot_files()
             provider = FileSystemBackupProvider()
             provider.backup(out_dir, snapshot)
         except SnapshotFileNotExists:
             print(
-                f"Failed local backup - One or more required snapshot files do not exist!"
+                "Failed local backup - One or more required snapshot files do not exist!"
             )
             sys.exit(1)
-        except:
+        except Exception:
             raise
 
     def log(self, message):
@@ -280,7 +283,7 @@ class SpotifySyncApp:
         except RestoreZipNotExists:
             print(f'Specified zip to restore does not exist: "{zip_file}"')
             sys.exit(1)
-        except:
+        except Exception:
             raise
 
     def _notify_user_config(self):
