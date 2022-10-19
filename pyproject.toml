@@ -30,6 +30,7 @@ flatdict = "^4.0.1"
 [tool.poetry.dev-dependencies]
 black = {version = "^22.6.0", allow-prereleases = true}
 pytest = "^7.1.2"
+pre-commit = "^2.20.0"
 
 [tool.poetry.scripts]
 spotify_sync = "spotify_sync.__main__:cli"
@@ -37,3 +38,20 @@ spotify_sync = "spotify_sync.__main__:cli"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
