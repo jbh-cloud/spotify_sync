@@ -47,7 +47,9 @@ class DownloadLogger:
 
     def _get_base_message(self):
         if len(str(self._downloadIndex)) != len(str(self._downloadTotal)):
-            zero_to_pad = len(str(self._downloadTotal)) - len(str(self._downloadIndex))
+            zero_to_pad = len(str(self._downloadTotal)) - len(
+                str(self._downloadIndex)
+            )
             self._base_message = f'{" ": <{zero_to_pad}}{str(self._downloadIndex)}/{str(self._downloadTotal)}'
         else:
             self._base_message = (
@@ -82,22 +84,22 @@ class DeemixHelper:
         self.config = app_config
 
     def arl_valid(self) -> bool:
-        self._logger.debug(f"Checking if arl is valid")
+        self._logger.debug("Checking if arl is valid")
         global arl_valid
         if not arl_valid:
-            self._logger.debug(f"arl_valid is False")
+            self._logger.debug("arl_valid is False")
             arl = self.config.data["DEEMIX_ARL"].strip()
-            self._logger.debug(f"Logging in with arl in config.json")
+            self._logger.debug("Logging in with arl in config.json")
             client = Deezer()
             login = client.login_via_arl(arl)
 
             if login:
-                self._logger.debug(f"Login successful")
+                self._logger.debug("Login successful")
                 arl_valid = True
                 return True
             else:
                 self._logger.error(
-                    f"Failed to login to Deezer with arl, you may need to refresh it"
+                    "Failed to login to Deezer with arl, you may need to refresh it"
                 )
                 return False
 
@@ -119,7 +121,14 @@ class DeemixHelper:
                 "DEEMIX_DOWNLOAD_PATH"
             ].replace("\\", "/")
 
-        accepted_bitrates = ["lossless", "320", "360", "360_mq", "360_lq", "128"]
+        accepted_bitrates = [
+            "lossless",
+            "320",
+            "360",
+            "360_mq",
+            "360_lq",
+            "128",
+        ]
         if self.config.data["DEEMIX_MAX_BITRATE"] not in accepted_bitrates:
             self._logger.error(
                 f'{self.config.data["DEEMIX_MAX_BITRATE"]} must be one of {",".join(accepted_bitrates)}'
@@ -130,11 +139,15 @@ class DeemixHelper:
         self,
     ) -> dict:
         deemix_config = DEFAULTS.copy()
-        deemix_config["downloadLocation"] = self.config.data["DEEMIX_DOWNLOAD_PATH"]
+        deemix_config["downloadLocation"] = self.config.data[
+            "DEEMIX_DOWNLOAD_PATH"
+        ]
         deemix_config["maxBitrate"] = getBitrateNumberFromText(
             self.config.data["DEEMIX_MAX_BITRATE"]
         )
-        deemix_config["fallbackISRC"] = not self.config.data["DEEMIX_STRICT_MATCHING"]
+        deemix_config["fallbackISRC"] = not self.config.data[
+            "DEEMIX_STRICT_MATCHING"
+        ]
         return deemix_config
 
 
@@ -154,9 +167,14 @@ class DeemixDownloader:
         self.songs_to_download: List[ProcessedSong] = []
         self.download_report: Dict[str, DownloadStatus] = {}
 
-    def download_wrapper(self, index, num_urls_to_download, song, download_obj):
+    def download_wrapper(
+        self, index, num_urls_to_download, song, download_obj
+    ):
         logger = DownloadLogger(
-            index=index, total=num_urls_to_download, song=song, logger=self._logger
+            index=index,
+            total=num_urls_to_download,
+            song=song,
+            logger=self._logger,
         )
         listener = LogListener()
         dl = Downloader(self.dz, download_obj, self.config, listener)
@@ -170,16 +188,19 @@ class DeemixDownloader:
         self.songs_to_download = songs
 
         if not self.deezer_logged_in:
-            self._logger.error("Failed to login with arl, you may need to refresh it")
+            self._logger.error(
+                "Failed to login with arl, you may need to refresh it"
+            )
             sys.exit(1)
 
         if self.skip_low_quality and self.max_bitrate in ["lossless", "320"]:
-            if self.max_bitrate == "lossless" and not self.dz.current_user.get(
-                "can_stream_lossless"
+            if (
+                self.max_bitrate == "lossless"
+                and not self.dz.current_user.get("can_stream_lossless")
             ):
                 self._logger.info(
-                    f"SKIP_LOW_QUALITY is specified and unable to stream FLAC, stopping script! "
-                    f"If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
+                    "SKIP_LOW_QUALITY is specified and unable to stream FLAC, stopping script! "
+                    "If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
                 )
                 sys.exit(1)
 
@@ -187,12 +208,14 @@ class DeemixDownloader:
                 "can_stream_hq"
             ):
                 self._logger.info(
-                    f"SKIP_LOW_QUALITY is specified and unable to stream 320, stopping script1 "
-                    f"If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
+                    "SKIP_LOW_QUALITY is specified and unable to stream 320, stopping script1 "
+                    "If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
                 )
                 sys.exit(1)
 
-        self._logger.info(f"Gathering song information in preparation for download..")
+        self._logger.info(
+            "Gathering song information in preparation for download.."
+        )
         download_objs = []
         with ThreadPoolExecutor(self.app_config.data["THREADS"]) as executor:
             dl_obj_futures = {
@@ -207,7 +230,9 @@ class DeemixDownloader:
             for future in as_completed(dl_obj_futures):
                 song = dl_obj_futures[future]
                 download_obj = future.result()
-                download_objs.append({"song": song, "download_obj": download_obj})
+                download_objs.append(
+                    {"song": song, "download_obj": download_obj}
+                )
 
         num_urls_to_download = len(self.songs_to_download)
         with ThreadPoolExecutor(self.app_config.data["THREADS"]) as executor:
@@ -241,7 +266,9 @@ class DeemixDownloader:
         dl_logger,
     ):
         if not isinstance(download_object, Single):
-            self._logger.error("Not a Single, unexpected type!", type(download_object))
+            self._logger.error(
+                "Not a Single, unexpected type!", type(download_object)
+            )
             sys.exit(1)
 
         errors = None
@@ -261,13 +288,15 @@ class DeemixDownloader:
 
             if download_skipped:
                 dl_logger.info(
-                    action="FINSIHED", message=f"Skipping, already downloaded"
+                    action="FINSIHED", message="Skipping, already downloaded"
                 )
                 status = True
                 md5 = get_md5(f)
 
             elif os.path.isfile(f):
-                dl_logger.info(action="FINSIHED", message=f"Successfully downloaded")
+                dl_logger.info(
+                    action="FINSIHED", message="Successfully downloaded"
+                )
                 status = True
                 md5 = get_md5(f)
             else:

@@ -40,5 +40,7 @@ class AutoScanService:
                 if response.status_code == 200:
                     self._logger.debug(f"Plex scan request: {p}")
                 else:
-                    self._logger.error(f"Failed to send Plex scan notification: {p}")
+                    self._logger.error(
+                        f"Failed to send Plex scan notification: {p}"
+                    )
             self._logger.info(f"Processed {len(paths)} scan request(s)")

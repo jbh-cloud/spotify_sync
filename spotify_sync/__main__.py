@@ -109,7 +109,9 @@ def migrate_config(config) -> None:
 @processed_songs_path
 @migrated_profile_name
 @migrated_config_schema_mode
-def migrate_to_profile(config, spotify, processed, profile, config_schema_mode) -> None:
+def migrate_to_profile(
+    config, spotify, processed, profile, config_schema_mode
+) -> None:
     """Migrate historical config and cache to a profile"""
     legacy = config_schema_mode == "legacy"
     app.migrate_to_profile(spotify, processed, profile, legacy)

@@ -20,16 +20,24 @@ class MatchLogger:
         self._song = song
 
     def info(self, message: str):
-        self._logger.info(f"[{self._song.artist} - {self._song.title}] - {message}")
+        self._logger.info(
+            f"[{self._song.artist} - {self._song.title}] - {message}"
+        )
 
     def warning(self, message: str):
-        self._logger.warning(f"[{self._song.artist} - {self._song.title}] - {message}")
+        self._logger.warning(
+            f"[{self._song.artist} - {self._song.title}] - {message}"
+        )
 
     def debug(self, message: str):
-        self._logger.debug(f"[{self._song.artist} - {self._song.title}] - {message}")
+        self._logger.debug(
+            f"[{self._song.artist} - {self._song.title}] - {message}"
+        )
 
     def error(self, message: str):
-        self._logger.error(f"[{self._song.artist} - {self._song.title}] - {message}")
+        self._logger.error(
+            f"[{self._song.artist} - {self._song.title}] - {message}"
+        )
 
 
 class SongMatcher:
@@ -44,7 +52,7 @@ class SongMatcher:
     def _match_via_isrc(self):
         track = Deezer.API.get_track(client.api, f"isrc:{self.song.isrc}")
 
-        self._logger.debug(f"Matched - [isrc]")
+        self._logger.debug("Matched - [isrc]")
         self.match = True
         self.match_type = "isrc"
         self.match_payload = track
@@ -58,12 +66,14 @@ class SongMatcher:
         )
 
         if len(deezer_search["data"]) > 0:
-            self._logger.debug(f"Matched - [fuzzy]")
+            self._logger.debug("Matched - [fuzzy]")
             self.match = True
             self.match_type = "fuzzy"
             self.match_payload = deezer_search["data"][0]
         else:
-            self._logger.debug(f"Failed fuzzy searching, SpotifyId: {self.song.id_}")
+            self._logger.debug(
+                f"Failed fuzzy searching, SpotifyId: {self.song.id_}"
+            )
 
     def search(self):
         try:
@@ -84,9 +94,9 @@ class SongMatcher:
                 )
                 return
 
-            if self.match_payload.get("artist") is not None and not self.match_payload[
+            if self.match_payload.get(
                 "artist"
-            ].get("name"):
+            ) is not None and not self.match_payload["artist"].get("name"):
                 self._logger.warning(
                     f"[SpotifyId:{self.song.id_}] - Matched but response does not contain an Deezer artist, unmatching.."
                 )
@@ -100,7 +110,7 @@ class SongMatcher:
                 )
                 self.match = False
                 self.match_message = (
-                    f"Matched but response does not contain a Deezer id"
+                    "Matched but response does not contain a Deezer id"
                 )
 
 
@@ -152,13 +162,19 @@ class MatchService:
             spotify_isrc=matcher.song.isrc,
             spotify_url=matcher.song.url,
             spotify_id=matcher.song.id_,
-            deezer_title=matcher.match_payload["title"] if matcher.match else None,
+            deezer_title=matcher.match_payload["title"]
+            if matcher.match
+            else None,
             deezer_artist=matcher.match_payload["artist"]["name"]
             if matcher.match
             else None,
             # deezer fuzzy search payload doesnt return isrc of matched item
-            deezer_isrc=matcher.match_payload.get("isrc") if matcher.match else None,
-            deezer_url=matcher.match_payload["link"] if matcher.match else None,
+            deezer_isrc=matcher.match_payload.get("isrc")
+            if matcher.match
+            else None,
+            deezer_url=matcher.match_payload["link"]
+            if matcher.match
+            else None,
             deezer_id=matcher.match_payload["id"] if matcher.match else None,
             matched=matcher.match,
             match_type=matcher.match_type,
@@ -176,7 +192,9 @@ class MatchService:
 
         self._logger.info(msg)
 
-        matchers = [SongMatcher(song=song) for song in self.unprocessed.values()]
+        matchers = [
+            SongMatcher(song=song) for song in self.unprocessed.values()
+        ]
         with ThreadPoolExecutor(self.config.data["THREADS"]) as executor:
             match_futures = [executor.submit(m.search()) for m in matchers]
             wait(match_futures)

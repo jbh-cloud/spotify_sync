@@ -18,7 +18,9 @@ class PushoverClient:
 
     def _validate(self):
         if not self._user.is_authenticated or not self._app.is_authenticated:
-            self._logger.warning("Failed to validate Pushover connection details")
+            self._logger.warning(
+                "Failed to validate Pushover connection details"
+            )
         else:
             self.valid = True
 
@@ -33,13 +35,17 @@ class PushoverClient:
         if self.config is not None and self.config.data["PUSHOVER_ENABLED"]:
             self.enabled = True
             self._app = Application(self.config.data["PUSHOVER_API_TOKEN"])
-            self._user = self._app.get_user(self.config.data["PUSHOVER_USER_KEY"])
+            self._user = self._app.get_user(
+                self.config.data["PUSHOVER_USER_KEY"]
+            )
             self._validate()
 
     def send_message(self, message: str):
         if self.enabled:
             if self.valid:
-                self._user.send_message(title=self._get_title(), message=message)
+                self._user.send_message(
+                    title=self._get_title(), message=message
+                )
             else:
                 self._logger.warning(
                     f"Pushover details are invalid, unable to send: {message}"

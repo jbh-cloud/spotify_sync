@@ -48,11 +48,17 @@ class BackupProvider:
 
             manifest = self._parse_manifest(extract_dest / ".manifest.json")
             if self._manifest_tampered(manifest):
-                print(f"Backup has been manually tampered with, exiting..")
+                print("Backup has been manually tampered with, exiting..")
                 sys.exit(1)
 
             snapshot = BackupSnapshot(
-                manifest.profile, manifest.spotify_user, None, None, None, None, None
+                manifest.profile,
+                manifest.spotify_user,
+                None,
+                None,
+                None,
+                None,
+                None,
             )
 
             if new_profile is not None:
@@ -75,7 +81,9 @@ class BackupProvider:
                 or snapshot.spotify is None
                 or snapshot.processed is None
             ):
-                print(f"Mandatory files are not present in backup, unable to restore..")
+                print(
+                    "Mandatory files are not present in backup, unable to restore.."
+                )
                 sys.exit(1)
 
             self._restore_snapshot(snapshot, force=overwrite_files)
@@ -92,7 +100,7 @@ class BackupProvider:
                 shutil.rmtree(extract_dest)
             except UnboundLocalError:
                 pass  # folder not created yet
-            except Exception as ex:
+            except Exception:
                 print(
                     f"Failed to remove temp dir: {extract_dest}. Please clean this up manually."
                 )
@@ -101,7 +109,9 @@ class BackupProvider:
     def _restore_snapshot(snapshot, force=False) -> None:
         cc = ConfigCache()
         c_loader = ConfigLoader(config_file=Path(snapshot.config))
-        config = Config(profile=None, path=snapshot.config, data=c_loader.load())
+        config = Config(
+            profile=None, path=snapshot.config, data=c_loader.load()
+        )
 
         if snapshot.profile is not None:
             config.profile = snapshot.profile
@@ -130,7 +140,7 @@ class BackupProvider:
     def _parse_manifest(file: Path) -> BackupManifest:
         if not file.exists() or not file.is_file():
             print(
-                f"Unable to find manifest in backup, are you use this is a spotify_sync backup?"
+                "Unable to find manifest in backup, are you use this is a spotify_sync backup?"
             )
             sys.exit(1)
 
@@ -143,7 +153,9 @@ class BackupProvider:
     def _manifest_tampered(manifest: BackupManifest) -> bool:
         message = (manifest.spotify_user + manifest.timestamp).encode("utf-8")
         dig = hmac.new(
-            INTEGRITY_BLOB.encode("utf-8"), msg=message, digestmod=hashlib.sha256
+            INTEGRITY_BLOB.encode("utf-8"),
+            msg=message,
+            digestmod=hashlib.sha256,
         ).digest()
         should_match = base64.b64encode(dig).decode()
         return not manifest.checksum == should_match
@@ -162,7 +174,10 @@ class BackupProvider:
             zipObj.writestr(
                 ".manifest.json",
                 json.dumps(
-                    manifest, indent=4, sort_keys=True, default=lambda obj: obj.__dict__
+                    manifest,
+                    indent=4,
+                    sort_keys=True,
+                    default=lambda obj: obj.__dict__,
                 ),
             )
 
@@ -185,7 +200,9 @@ class BackupProvider:
     def _get_manifest_checksum(timestamp, username):
         message = (username + timestamp).encode("utf-8")
         dig = hmac.new(
-            INTEGRITY_BLOB.encode("utf-8"), msg=message, digestmod=hashlib.sha256
+            INTEGRITY_BLOB.encode("utf-8"),
+            msg=message,
+            digestmod=hashlib.sha256,
         ).digest()
         return base64.b64encode(dig).decode()  # py3k-mode
 
@@ -197,7 +214,9 @@ class FileSystemBackupProvider(BackupProvider):
     def backup(self, out_dir: Union[str, None], snapshot: BackupSnapshot):
         self.snapshot = snapshot
         try:
-            export_fn = (Path(os.getcwd()) if out_dir is None else Path(out_dir)) / (
+            export_fn = (
+                Path(os.getcwd()) if out_dir is None else Path(out_dir)
+            ) / (
                 "spotify_sync_backup_"
                 + datetime.utcnow().strftime("%Y-%m-%dT%H%M%S")
                 + ".zip"
@@ -209,5 +228,9 @@ class FileSystemBackupProvider(BackupProvider):
             print(f"Failed creating backup, error was: {ex}")
             sys.exit(1)
 
-    def restore(self, zip_file: Path, force=False, new_profile=Union[str, None]):
-        self.restore_zip_file(zip_file, overwrite_files=force, new_profile=new_profile)
+    def restore(
+        self, zip_file: Path, force=False, new_profile=Union[str, None]
+    ):
+        self.restore_zip_file(
+            zip_file, overwrite_files=force, new_profile=new_profile
+        )

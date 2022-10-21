@@ -100,16 +100,22 @@ class SpotifySong:
         self.explicit: explicit
 
     def from_api(self, song: dict):
-        self.id_ = song["track"]["id"] if song.get("track") is not None else None
+        self.id_ = (
+            song["track"]["id"] if song.get("track") is not None else None
+        )
         self.artist = (
             song["track"]["artists"][0]["name"]
             if song.get("track") is not None
             else None
         )
         self.album = (
-            song["track"]["album"]["name"] if song.get("track") is not None else None
+            song["track"]["album"]["name"]
+            if song.get("track") is not None
+            else None
         )
-        self.title = song["track"]["name"] if song.get("track") is not None else None
+        self.title = (
+            song["track"]["name"] if song.get("track") is not None else None
+        )
         self.url = (
             song["track"]["external_urls"].get("spotify")
             if song.get("track") is not None
@@ -121,7 +127,9 @@ class SpotifySong:
             else None
         )
         self.explicit = (
-            song["track"]["explicit"] if song.get("track") is not None else None
+            song["track"]["explicit"]
+            if song.get("track") is not None
+            else None
         )
 
     def from_dict(self, dictionary: dict):

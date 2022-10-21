@@ -1,4 +1,13 @@
-from click import argument, option, Option, UsageError, Path, STRING, Choice, BOOL
+from click import (
+    argument,
+    option,
+    Option,
+    UsageError,
+    Path,
+    STRING,
+    Choice,
+    BOOL,
+)
 from click_option_group import optgroup, RequiredMutuallyExclusiveOptionGroup
 
 # local imports
@@ -45,7 +54,10 @@ backup_output_dir = option(
 restore_zip_file = argument("zip_file", type=Path(exists=True), required=True)
 
 restore_zip_file_profile = option(
-    "--new-profile", type=STRING, required=False, help="New profile name to restore to"
+    "--new-profile",
+    type=STRING,
+    required=False,
+    help="New profile name to restore to",
 )
 
 restore_zip_file_force_overwrite = option(
