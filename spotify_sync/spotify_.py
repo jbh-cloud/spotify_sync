@@ -85,7 +85,11 @@ class SpotifyService:
     def _generate_playlist_songs_mapping(self, playlists: dict):
         ret = {}
         for k, playlist in playlists.items():
-            ret[k] = {"playlist_name": playlist["name"], "playlist_id": k, "tracks": []}
+            ret[k] = {
+                "playlist_name": playlist["name"],
+                "playlist_id": k,
+                "tracks": [],
+            }
             songs = self.paginator.get_songs_from_playlists(playlist=playlist)
             ret[k]["tracks"] = [v.id_ for v in songs]
 
@@ -101,7 +105,9 @@ class SpotifyService:
         self._logger.info("Fetching liked songs")
         return self.paginator.user_liked()
 
-    def _merge_liked(self, cached: Dict[str, SpotifySong], online: List[SpotifySong]):
+    def _merge_liked(
+        self, cached: Dict[str, SpotifySong], online: List[SpotifySong]
+    ):
         ret = cached.copy()
         new_liked_songs = 0
         for s in online:
@@ -175,7 +181,9 @@ class SpotifyPaginator:
         return self._to_spotify_song(response)
 
     def user_playlists(self, playlists_to_exclude) -> dict:
-        return self._get_all("playlists", playlists_to_exclude=playlists_to_exclude)
+        return self._get_all(
+            "playlists", playlists_to_exclude=playlists_to_exclude
+        )
 
     def get_songs_from_playlists(
         self, playlist=None, playlists=None
@@ -193,7 +201,9 @@ class SpotifyPaginator:
             if playlist["name"] not in playlists_to_exclude:
                 ret[playlist["id"]] = playlist
             else:
-                self._logger.debug(f'{playlist["name"]} was in exclude list, skipping')
+                self._logger.debug(
+                    f'{playlist["name"]} was in exclude list, skipping'
+                )
 
         return ret
 
@@ -227,14 +237,20 @@ class SpotifyPaginator:
 
             if "playlist" in kwargs:
                 return self._page_api(
-                    self.spotify_svc.sp.playlist_items(kwargs["playlist"]["id"])
+                    self.spotify_svc.sp.playlist_items(
+                        kwargs["playlist"]["id"]
+                    )
                 )
 
             ret = []
             for k, playlist in kwargs["playlists"].items():
-                self._logger.debug(f'Fetching songs for playlist: {playlist["name"]}')
+                self._logger.debug(
+                    f'Fetching songs for playlist: {playlist["name"]}'
+                )
                 ret.extend(
-                    self._page_api(self.spotify_svc.sp.playlist_items(playlist["id"]))
+                    self._page_api(
+                        self.spotify_svc.sp.playlist_items(playlist["id"])
+                    )
                 )
 
             return ret

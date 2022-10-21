@@ -7,10 +7,14 @@ from logging.handlers import RotatingFileHandler
 
 ROOT_LOGGER = None
 LOG_LEVEL = (
-    os.environ["LOG_LEVEL"] if os.environ.get("LOG_LEVEL") is not None else "INFO"
+    os.environ["LOG_LEVEL"]
+    if os.environ.get("LOG_LEVEL") is not None
+    else "INFO"
 )
 LOG_PATH = (
-    Path(os.environ["LOG_PATH"]) if os.environ.get("LOG_PATH") is not None else ""
+    Path(os.environ["LOG_PATH"])
+    if os.environ.get("LOG_PATH") is not None
+    else ""
 )
 
 

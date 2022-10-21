@@ -52,9 +52,15 @@ class DownloadService:
             if status.success:
                 processed[status.spotify_id].match_pending_download = False
                 processed[status.spotify_id].downloaded = True
-                processed[status.spotify_id].download_isrc = status.downloaded_isrc
-                processed[status.spotify_id].download_url = status.downloaded_url
-                processed[status.spotify_id].download_path = status.download_path
+                processed[
+                    status.spotify_id
+                ].download_isrc = status.downloaded_isrc
+                processed[
+                    status.spotify_id
+                ].download_url = status.downloaded_url
+                processed[
+                    status.spotify_id
+                ].download_path = status.download_path
                 processed[status.spotify_id].download_md5 = status.md5
                 processed[
                     status.spotify_id
@@ -64,12 +70,20 @@ class DownloadService:
             else:
                 processed[status.spotify_id].match_pending_download = True
                 processed[status.spotify_id].downloaded = False
-                processed[status.spotify_id].download_isrc = status.downloaded_isrc
-                processed[status.spotify_id].download_url = status.downloaded_url
-                processed[status.spotify_id].download_path = status.download_path
+                processed[
+                    status.spotify_id
+                ].download_isrc = status.downloaded_isrc
+                processed[
+                    status.spotify_id
+                ].download_url = status.downloaded_url
+                processed[
+                    status.spotify_id
+                ].download_path = status.download_path
                 processed[status.spotify_id].download_md5 = status.md5
                 processed[status.spotify_id].download_failed = True
-                processed[status.spotify_id].download_failed_reason = "\n".join(
+                processed[
+                    status.spotify_id
+                ].download_failed_reason = "\n".join(
                     [v["message"] for v in status.errors]
                 )
 
@@ -107,7 +121,7 @@ class DownloadService:
     def display_failed_download_stats(self) -> None:
         stats = self.get_failed_download_status_summary()
         if len(stats) == 0:
-            print(f"No failed downloads")
+            print("No failed downloads")
             return
 
         header = stats[0].keys()
@@ -130,7 +144,9 @@ class DownloadService:
         downloader = DeemixDownloader(app_config=self.config)
         downloader.download_songs(songs)
         failed_songs, succeeded_songs, reports = downloader.get_report()
-        self._logger.info(f"Successfully downloaded {succeeded_songs}/{len(songs)}")
+        self._logger.info(
+            f"Successfully downloaded {succeeded_songs}/{len(songs)}"
+        )
 
         self.persist_download_status(reports)
         self.get_file_download_paths(reports)

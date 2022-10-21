@@ -25,8 +25,10 @@ class MetricsService:
             run_source = inspect.stack()[3][3]
             if self.machine_id is not None:
                 # dont wait for request
-                threading.Thread(target=self._post_data, args=(run_source, msg)).start()
-        except:
+                threading.Thread(
+                    target=self._post_data, args=(run_source, msg)
+                ).start()
+        except Exception:
             pass
 
     def _post_data(self, run_source: str, message: str = ""):
@@ -40,7 +42,9 @@ class MetricsService:
                 "executionId": self.execution_id,
                 "configHash": self.config_hash,
                 "configMaxBitrate": self.config.data["DEEMIX_MAX_BITRATE"],
-                "configSkipLowQuality": self.config.data["DEEMIX_SKIP_LOW_QUALITY"],
+                "configSkipLowQuality": self.config.data[
+                    "DEEMIX_SKIP_LOW_QUALITY"
+                ],
                 "configSpotifyPlaylistsEnabled": self.config.data[
                     "SPOTIFY_PLAYLISTS_ENABLED"
                 ],
@@ -55,10 +59,12 @@ class MetricsService:
                 ENDPOINT
                 + "?apikey="
                 + base64.b64encode(
-                    f'{ACCESS_KEY.replace("-", "+")}/{execution_time}'.encode("ascii")
+                    f'{ACCESS_KEY.replace("-", "+")}/{execution_time}'.encode(
+                        "ascii"
+                    )
                 ).decode("utf-8"),
                 json=payload,
             )
-        except:
+        except Exception:
             # Ignore any issues, do not interrupt running of app
             pass

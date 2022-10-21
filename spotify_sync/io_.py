@@ -7,7 +7,12 @@ from typing import Dict, Union
 from spotify_sync.appdirs_ import DATA
 from spotify_sync.config import Config
 from spotify_sync.dataclasses import SpotifySong, ProcessedSong, BackupSnapshot
-from spotify_sync.common import load_json, dump_json, as_spotify_song, as_processed_song
+from spotify_sync.common import (
+    load_json,
+    dump_json,
+    as_spotify_song,
+    as_processed_song,
+)
 from spotify_sync.errors import SnapshotFileNotExists
 
 
@@ -19,7 +24,10 @@ class PersistentDataService:
         self._generate_machine_id()
 
     def verify_files(self):
-        files = [self.get_spotify_songs_path(), self.get_processed_songs_path()]
+        files = [
+            self.get_spotify_songs_path(),
+            self.get_processed_songs_path(),
+        ]
 
         for f in files:
             if not Path(f).is_file():
@@ -82,10 +90,16 @@ class PersistentDataService:
         return snapshot
 
     def get_spotify_songs_path(self) -> Path:
-        return self.user_root / f'spotify-{self.config.data["SPOTIFY_USERNAME"]}.json'
+        return (
+            self.user_root
+            / f'spotify-{self.config.data["SPOTIFY_USERNAME"]}.json'
+        )
 
     def get_processed_songs_path(self) -> Path:
-        return self.user_root / f'processed-{self.config.data["SPOTIFY_USERNAME"]}.json'
+        return (
+            self.user_root
+            / f'processed-{self.config.data["SPOTIFY_USERNAME"]}.json'
+        )
 
     def get_playlist_mapping_path(self) -> Path:
         return (
@@ -109,19 +123,23 @@ class PersistentDataService:
     def get_anon_machine_id(self) -> Union[str, None]:
         try:
             return load_json(self.root / ".machine.json")["id"]
-        except:
+        except Exception:
             return None
 
     def _generate_machine_id(self):
         if not (self.root / ".machine.json").exists():
             dump_json(
-                self.root / ".machine.json", {"id": str(uuid.uuid4())}, hidden=True
+                self.root / ".machine.json",
+                {"id": str(uuid.uuid4())},
+                hidden=True,
             )
 
     @staticmethod
     def _get_user_root_dir(config: Config) -> Path:
         if config.profile is not None:
-            root = Path(DATA) / (config.data["SPOTIFY_USERNAME"] + f"_{config.profile}")
+            root = Path(DATA) / (
+                config.data["SPOTIFY_USERNAME"] + f"_{config.profile}"
+            )
         else:
             root = Path(DATA) / config.data["SPOTIFY_USERNAME"]
 

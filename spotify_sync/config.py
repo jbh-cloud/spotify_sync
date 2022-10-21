@@ -19,11 +19,15 @@ from spotify_sync.dataclasses import ConfigProfile, Config
 from spotify_sync.errors import JsonSchemaInvalid
 from spotify_sync.io_ import PersistentDataService
 
-current_schema = json.load(resource_stream("spotify_sync", "data/config_schema.json"))
+current_schema = json.load(
+    resource_stream("spotify_sync", "data/config_schema.json")
+)
 legacy_schema = json.load(
     resource_stream("spotify_sync", "data/config_schema_legacy.json")
 )
-config_example = json.load(resource_stream("spotify_sync", "data/config.json.example"))
+config_example = json.load(
+    resource_stream("spotify_sync", "data/config.json.example")
+)
 
 cfg = None
 
@@ -49,7 +53,7 @@ class ConfigCache:
 
     def add(self, name: str, path: str, force=False) -> None:
         if " " in name:
-            print(f"Profile must not contain spaces!")
+            print("Profile must not contain spaces!")
             sys.exit(1)
 
         lookup_profile = self._get_profile(name)
@@ -61,7 +65,7 @@ class ConfigCache:
         if not c_loader.is_valid:
             print(f"Config validation error: {c_loader.validation_msg}")
             print(
-                f"Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+                "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
             )
             sys.exit(1)
 
@@ -124,7 +128,9 @@ class ConfigCache:
         for p in self.profiles:
             c_loader = ConfigLoader(profile=p)
             conf = c_loader.load()
-            pd_root = PersistentDataService(Config(p.name, p.path, conf)).user_root
+            pd_root = PersistentDataService(
+                Config(p.name, p.path, conf)
+            ).user_root
             summary_data.append(
                 [
                     p.name,
@@ -181,7 +187,9 @@ class ConfigCache:
             parts = config_file.name.split(".")
             if len(parts) == 3:
                 i = int(parts[1]) + 1
-                config_file = Path(w_dir / (parts[0] + f".{str(i)}." + parts[2]))
+                config_file = Path(
+                    w_dir / (parts[0] + f".{str(i)}." + parts[2])
+                )
             else:
                 config_file = Path(w_dir / (parts[0] + ".1." + parts[1]))
 
@@ -201,7 +209,10 @@ class ConfigCache:
 
 class ConfigLoader:
     def __init__(
-        self, profile: ConfigProfile = None, config_file: Path = None, legacy_mode=False
+        self,
+        profile: ConfigProfile = None,
+        config_file: Path = None,
+        legacy_mode=False,
     ):
         self.profile = profile
         self.config_file = config_file
@@ -226,13 +237,17 @@ class ConfigLoader:
         config["threads"] = self._config["threads"]
         config["anon_metrics_enable"] = True
         config["deemix"]["arl"] = self._config["deemix"]["arl"]
-        config["deemix"]["download_path"] = self._config["deemix"]["download_path"]
+        config["deemix"]["download_path"] = self._config["deemix"][
+            "download_path"
+        ]
         config["deemix"]["max_bitrate"] = self._config["deemix"]["max_bitrate"]
         config["deemix"]["skip_low_quality"] = self._config["deemix"][
             "skip_low_quality"
         ]
         config["spotify"]["client_id"] = self._config["spotify"]["client_id"]
-        config["spotify"]["client_secret"] = self._config["spotify"]["client_secret"]
+        config["spotify"]["client_secret"] = self._config["spotify"][
+            "client_secret"
+        ]
         config["spotify"]["username"] = self._config["spotify"]["username"]
         config["spotify"]["scope"] = self._config["spotify"]["scope"]
         config["spotify"]["redirect_uri_port"] = self._config["spotify"][
@@ -249,7 +264,9 @@ class ConfigLoader:
         config["pushover"]["api_token"] = self._config["pushover"]["api_token"]
         config["autoscan"]["enabled"] = self._config["autoscan"]["enabled"]
         config["autoscan"]["endpoint"] = self._config["autoscan"]["endpoint"]
-        config["autoscan"]["auth_enabled"] = self._config["autoscan"]["auth_enabled"]
+        config["autoscan"]["auth_enabled"] = self._config["autoscan"][
+            "auth_enabled"
+        ]
         config["autoscan"]["username"] = self._config["autoscan"]["username"]
         config["autoscan"]["password"] = self._config["autoscan"]["password"]
 
@@ -259,14 +276,16 @@ class ConfigLoader:
         if self.is_valid:
             return config
         else:
-            print(f"Migrated config did not meet the new schema.")
+            print("Migrated config did not meet the new schema.")
             print(f"Validation error: {self.validation_msg}")
             print(f"Config dump -> {json.dumps(config, indent=True)}")
             sys.exit(1)
 
     def _load_config(self) -> None:
         if self.profile is None and self.config_file is None:
-            raise Exception("Must either specify a config file or config profile!")
+            raise Exception(
+                "Must either specify a config file or config profile!"
+            )
 
         if self.profile is not None:
             try:
@@ -280,7 +299,7 @@ class ConfigLoader:
                 print(f"Config for profile {self.profile.name} is not valid")
                 print(f"Validation error: {self.validation_msg}")
                 print(
-                    f"Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+                    "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
                 )
                 sys.exit(1)
 
@@ -296,10 +315,10 @@ class ConfigLoader:
 
             self._validate(self._config)
             if not self.is_valid and not self._attempt_update_schema():
-                print(f"Specified config is not valid")
+                print("Specified config is not valid")
                 print(f"Validation error: {self.validation_msg}")
                 print(
-                    f"Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+                    "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
                 )
                 sys.exit(1)
 
@@ -325,7 +344,7 @@ class ConfigLoader:
                 if int(self._config["threads"]) <= machine_threads
                 else machine_threads
             )
-        except:
+        except Exception:
             # Failed parsing int from self._config["THREADS"], using max available
             threads = machine_threads
 
@@ -341,10 +360,16 @@ class ConfigLoader:
 
     @staticmethod
     def _flatten_settings(data: dict) -> dict:
-        return {k.upper(): v for k, v in dict(FlatDict(data, delimiter="_")).items()}
+        return {
+            k.upper(): v
+            for k, v in dict(FlatDict(data, delimiter="_")).items()
+        }
 
     def _attempt_update_schema(self) -> bool:
-        if self.validation_msg == "'anon_metrics_enable' is a required property":
+        if (
+            self.validation_msg
+            == "'anon_metrics_enable' is a required property"
+        ):
             temp_config = add_metrics_to_config(self._config)
             self._validate(temp_config)
             if self.is_valid:
@@ -359,14 +384,18 @@ def load() -> Config:
     global cfg
     if cfg is None:
         if os.environ.get("MANUAL_CONFIG_FILE") is not None:
-            cl = ConfigLoader(config_file=Path(os.environ["MANUAL_CONFIG_FILE"]))
+            cl = ConfigLoader(
+                config_file=Path(os.environ["MANUAL_CONFIG_FILE"])
+            )
             cfg = Config(path=cl.config_file, data=cl.load(), profile=None)
         elif os.environ.get("CONFIG_PROFILE") is not None:
             cc = ConfigCache()
             profile = cc.get(os.environ["CONFIG_PROFILE"])
 
             if profile is None:
-                print(f'No profile found with name: {os.environ["CONFIG_PROFILE"]}')
+                print(
+                    f'No profile found with name: {os.environ["CONFIG_PROFILE"]}'
+                )
                 sys.exit(1)
 
             cfg = Config(
@@ -374,7 +403,9 @@ def load() -> Config:
                 data=ConfigLoader(profile=profile).load(),
                 profile=profile.name,
             )
-            os.environ["LOG_PATH"] = str(PersistentDataService(cfg).get_log_path())
+            os.environ["LOG_PATH"] = str(
+                PersistentDataService(cfg).get_log_path()
+            )
         else:
             raise Exception(
                 "Must load config with either a config file or config profile"
