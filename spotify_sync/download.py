@@ -141,7 +141,9 @@ class DownloadService:
             return
 
         self._logger.info(f"Downloading {len(songs)} song(s) from Deezer")
-        downloader = DeemixDownloader(app_config=self.config)
+        downloader = DeemixDownloader(
+            app_config=self.config, pushover=self._pushover
+        )
         downloader.download_songs(songs)
         failed_songs, succeeded_songs, reports = downloader.get_report()
         self._logger.info(
