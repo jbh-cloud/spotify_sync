@@ -2,6 +2,7 @@ from typing import Dict
 import deezer as Deezer
 from deezer.errors import DataException
 from concurrent.futures import ThreadPoolExecutor, wait
+from requests import JSONDecodeError
 
 # local imports
 from spotify_sync.dataclasses import Config
@@ -58,12 +59,18 @@ class SongMatcher:
         self.match_payload = track
 
     def _match_fuzzy(self):
-        deezer_search = Deezer.API.advanced_search(
-            client.api,  # self
-            self.song.artist,  # artist
-            self.song.album,  # album
-            self.song.title,  # track name
-        )
+        try:
+            deezer_search = Deezer.API.advanced_search(
+                client.api,  # self
+                self.song.artist,  # artist
+                self.song.album,  # album
+                self.song.title,  # track name
+            )
+        except JSONDecodeError as ex:
+            self._logger.debug(f"Failed fuzzy search with: {ex}")
+            deezer_search = {
+                "data": []
+            }  # create empty deezer_search, handled as failure below
 
         if len(deezer_search["data"]) > 0:
             self._logger.debug("Matched - [fuzzy]")
