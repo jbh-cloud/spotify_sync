@@ -14,6 +14,7 @@ from deemix.types.DownloadObjects import Single
 from spotify_sync.config import Config
 from spotify_sync.dataclasses import ProcessedSong, DownloadStatus
 from spotify_sync.common import get_md5, dump_json, load_json
+from spotify_sync.pushover_ import PushoverClient
 
 arl_valid = False
 
@@ -152,11 +153,12 @@ class DeemixHelper:
 
 
 class DeemixDownloader:
-    def __init__(self, app_config: Config):
+    def __init__(self, app_config: Config, pushover: PushoverClient):
         from spotify_sync.log import get_logger
 
         self._logger = get_logger().getChild("DeemixDownloader")
         self.dz = Deezer()
+        self.pushover = pushover
         self.app_config = app_config
         self.config = DeemixHelper(self.app_config).get_deemix_config()
         self.deezer_logged_in = self.dz.login_via_arl(
@@ -194,23 +196,23 @@ class DeemixDownloader:
             sys.exit(1)
 
         if self.skip_low_quality and self.max_bitrate in ["lossless", "320"]:
+            skip_low_quality_enforced = False
+
             if (
                 self.max_bitrate == "lossless"
                 and not self.dz.current_user.get("can_stream_lossless")
             ):
-                self._logger.info(
-                    "SKIP_LOW_QUALITY is specified and unable to stream FLAC, stopping script! "
-                    "If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
-                )
-                sys.exit(1)
+                skip_low_quality_enforced = True
 
             if self.max_bitrate == "320" and not self.dz.current_user.get(
                 "can_stream_hq"
             ):
-                self._logger.info(
-                    "SKIP_LOW_QUALITY is specified and unable to stream 320, stopping script1 "
-                    "If this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
-                )
+                skip_low_quality_enforced = True
+
+            if skip_low_quality_enforced:
+                msg = f"SKIP_LOW_QUALITY is specified and unable to stream {self.max_bitrate}, stopping script!\nIf this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
+                self._logger.error(msg)
+                self.pushover.send_message(msg)
                 sys.exit(1)
 
         self._logger.info(
