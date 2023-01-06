@@ -288,65 +288,44 @@ class ConfigLoader:
             )
 
         if self.profile is not None:
-            try:
-                with open(self.profile.path, mode="r", encoding="utf-8") as f:
-                    self._config = json.load(f)
-            except Exception as ex:
-                raise Exception(ex)
+            config_path = self.profile.path
+            validation_msg_error = f"Config for profile {self.profile.name} is not valid"
+        else:
+            config_path = self.config_file
+            validation_msg_error = f"Config file is not valid: {self.config_file}"
 
-            self._validate(self._config)
-            if not self.is_valid and not self._attempt_update_schema():
-                print(f"Config for profile {self.profile.name} is not valid")
-                print(f"Validation error: {self.validation_msg}")
-                print(
-                    "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
-                )
-                sys.exit(1)
+        with open(config_path, mode="r", encoding="utf-8") as f:
+            self._config = json.load(f)
 
-            self._config["THREADS"] = self._get_threads()
-            return
+        self._validate(self._config)
+        if not self.is_valid and not self._attempt_update_schema():
+            print(validation_msg_error)
+            print(f"Validation error: {self.validation_msg}")
+            print(
+                "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+            )
+            sys.exit(1)
 
-        if self.config_file is not None:
-            try:
-                with open(self.config_file, mode="r", encoding="utf-8") as f:
-                    self._config = json.load(f)
-            except Exception as ex:
-                raise Exception(ex)
+        self._parse_threads()
 
-            self._validate(self._config)
-            if not self.is_valid and not self._attempt_update_schema():
-                print("Specified config is not valid")
-                print(f"Validation error: {self.validation_msg}")
-                print(
-                    "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
-                )
-                sys.exit(1)
-
-            self._get_threads()
-            return
-
-        raise Exception(
-            "Both profile and config_file are both None, this should never happen"
-        )
-
-    def _get_threads(self) -> None:
+    def _parse_threads(self) -> None:
         # Ensure key case correct
         self._config = {k.lower(): v for k, v in self._config.items()}
 
         machine_threads = psutil.cpu_count()
         if self._config["threads"] == "":
-            return machine_threads
-
-        try:
-            threads = int(self._config["threads"])
-            threads = (
-                threads
-                if int(self._config["threads"]) <= machine_threads
-                else machine_threads
-            )
-        except Exception:
-            # Failed parsing int from self._config["THREADS"], using max available
             threads = machine_threads
+        else:
+            try:
+                threads = int(self._config["threads"])
+                threads = (
+                    threads
+                    if int(self._config["threads"]) <= machine_threads
+                    else machine_threads
+                )
+            except Exception:
+                # Failed parsing int from self._config["THREADS"], using max available
+                threads = machine_threads
 
         self._config["threads"] = threads
 
