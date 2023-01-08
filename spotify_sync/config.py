@@ -289,16 +289,20 @@ class ConfigLoader:
 
         if self.profile is not None:
             config_path = self.profile.path
-            validation_msg_error = f"Config for profile {self.profile.name} is not valid"
+            validation_msg_error = (
+                f"Config for profile {self.profile.name} is not valid"
+            )
         else:
             config_path = self.config_file
-            validation_msg_error = f"Config file is not valid: {self.config_file}"
+            validation_msg_error = (
+                f"Config file is not valid: {self.config_file}"
+            )
 
         with open(config_path, mode="r", encoding="utf-8") as f:
             self._config = json.load(f)
 
         self._validate(self._config)
-        if not self.is_valid and not self._attempt_update_schema():
+        if not self.is_valid and not self._try_auto_update_config():
             print(validation_msg_error)
             print(f"Validation error: {self.validation_msg}")
             print(
@@ -313,19 +317,14 @@ class ConfigLoader:
         self._config = {k.lower(): v for k, v in self._config.items()}
 
         machine_threads = psutil.cpu_count()
-        if self._config["threads"] == "":
+        if self._config["threads"] == -1:
             threads = machine_threads
         else:
-            try:
-                threads = int(self._config["threads"])
-                threads = (
-                    threads
-                    if int(self._config["threads"]) <= machine_threads
-                    else machine_threads
-                )
-            except Exception:
-                # Failed parsing int from self._config["THREADS"], using max available
-                threads = machine_threads
+            threads = (
+                self._config["threads"]
+                if self._config["threads"] <= machine_threads
+                else machine_threads
+            )
 
         self._config["threads"] = threads
 
@@ -344,19 +343,45 @@ class ConfigLoader:
             for k, v in dict(FlatDict(data, delimiter="_")).items()
         }
 
-    def _attempt_update_schema(self) -> bool:
-        if (
-            self.validation_msg
-            == "'anon_metrics_enable' is a required property"
-        ):
-            temp_config = add_metrics_to_config(self._config)
-            self._validate(temp_config)
-            if self.is_valid:
-                self._config = temp_config
-                dump_json(self.config_file or self.profile.path, self._config)
-                return True
+    def _try_auto_update_config(self) -> bool:
+        updated_config = auto_update_config(self._config)
+        self._validate(updated_config)
+        if self.is_valid:
+            self._config = updated_config
+            dump_json(self.config_file or self.profile.path, self._config)
+            return True
 
-        return False
+
+def auto_update_config(config: dict) -> dict:
+    c = config.copy()
+    try:
+        if c.get("anon_metrics_enable") is None:
+            c["anon_metrics_enable"] = False
+
+        if c["spotify"].get("custom_application") is None:
+            c["spotify"]["custom_application"] = {
+                "enabled": True,
+                "client_id": c["spotify"]["client_id"],
+                "client_secret": c["spotify"]["client_secret"],
+                "scope": c["spotify"]["scope"],
+                "redirect_uri_port": c["spotify"]["redirect_uri_port"],
+            }
+
+            del c["spotify"]["client_id"]
+            del c["spotify"]["client_secret"]
+            del c["spotify"]["scope"]
+            del c["spotify"]["redirect_uri_port"]
+
+        if isinstance(c["threads"], str):
+            try:
+                c["threads"] = int(c["threads"])
+            except ValueError:
+                # Unable to parse threads from str, using all available
+                c["threads"] = -1
+
+        return c
+    except Exception:
+        return config
 
 
 def load() -> Config:
@@ -396,8 +421,3 @@ def load() -> Config:
 def set_env(input_value: str, env_name: str) -> None:
     if input_value is not None:
         os.environ[env_name] = input_value
-
-
-def add_metrics_to_config(config) -> dict:
-    config["anon_metrics_enable"] = False
-    return config

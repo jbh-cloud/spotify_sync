@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "threads": {
-      "type": "string"
+      "type": "integer"
     },
     "anon_metrics_enable": {
       "type": "boolean"
@@ -34,19 +34,34 @@
     "spotify": {
       "type": "object",
       "properties": {
-        "client_id": {
-          "type": "string"
-        },
-        "client_secret": {
-          "type": "string"
+        "custom_application": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "client_id": {
+              "type": "string"
+            },
+            "client_secret": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "string"
+            },
+            "redirect_uri_port": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "client_id",
+            "client_secret",
+            "scope",
+            "redirect_uri_port"
+          ]
         },
         "username": {
-          "type": "string"
-        },
-        "scope": {
-          "type": "string"
-        },
-        "redirect_uri_port": {
           "type": "string"
         },
         "playlists": {
@@ -67,16 +82,14 @@
           },
           "required": [
             "enabled",
+            "owner_only",
             "excluded"
           ]
         }
       },
       "required": [
-        "client_id",
-        "client_secret",
+        "custom_application",
         "username",
-        "scope",
-        "redirect_uri_port",
         "playlists"
       ]
     },

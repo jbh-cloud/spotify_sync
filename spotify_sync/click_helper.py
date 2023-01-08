@@ -1,12 +1,9 @@
 from click import (
     argument,
     option,
-    Option,
-    UsageError,
     Path,
     STRING,
     Choice,
-    BOOL,
 )
 from click_option_group import optgroup, RequiredMutuallyExclusiveOptionGroup
 
@@ -113,4 +110,12 @@ log_level = option(
     is_flag=True,
     callback=notify_config,
     help="Sets verbosity to DEBUG",
+)
+
+force_spotify_reauth = option(
+    "--force",
+    "-f",
+    required=False,
+    is_flag=True,
+    help="Force a new Spotify authorization regardless of current state",
 )

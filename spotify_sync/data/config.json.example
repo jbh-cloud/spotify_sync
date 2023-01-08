@@ -1,5 +1,5 @@
 {
-    "threads": "",
+    "threads": -1,
     "anon_metrics_enable": true,
     "deemix": {
         "arl": "9fd6f15...68e755125e11b",
@@ -9,11 +9,14 @@
         "strict_matching": true
     },
     "spotify": {
-        "client_id": "",
-        "client_secret": "",
+        "custom_application": {
+            "enabled": false,
+            "client_id": "",
+            "client_secret": "",
+            "scope": "user-library-read, playlist-read-private, playlist-read-collaborative",
+            "redirect_uri_port": "9090"
+        },
         "username": "",
-        "scope": "user-library-read, playlist-read-private, playlist-read-collaborative",
-        "redirect_uri_port": "9090",
         "playlists": {
             "enabled": false,
             "owner_only": true,

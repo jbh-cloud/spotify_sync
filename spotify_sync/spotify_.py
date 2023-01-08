@@ -1,8 +1,8 @@
 import sys
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth, CacheFileHandler
+from spotipy.oauth2 import SpotifyOAuth, SpotifyPKCE, CacheFileHandler
 from tabulate import tabulate
-from typing import List, Dict
+from typing import List, Dict, Union
 
 # Local imports
 from spotify_sync.config import Config
@@ -11,13 +11,18 @@ from spotify_sync.dataclasses import SpotifySong
 
 
 class SpotifyService:
-    def __init__(self, app_config: Config, pd_svc: PersistentDataService):
+    def __init__(
+        self,
+        app_config: Config,
+        pd_svc: PersistentDataService,
+        force_reauth=False,
+    ):
         from spotify_sync.log import get_logger
 
         self._logger = get_logger().getChild("SpotifyService")
         self.config = app_config
         self.pd_svc = pd_svc
-        self.sp = spotipy.Spotify(auth_manager=self._get_oauth())
+        self.sp = spotipy.Spotify(auth_manager=self._get_oauth(force_reauth))
         self.paginator = SpotifyPaginator(self)
         self.songs = []
 
@@ -45,8 +50,7 @@ class SpotifyService:
                 token = auth.get_access_token()
             return {"Authorization": "Bearer {0}".format(token)}
 
-        headers = _auth_headers()
-        return
+        _auth_headers()
 
     def display_playlist_stats(self):
         self._preflight()
@@ -138,17 +142,35 @@ class SpotifyService:
         )
         return songs, playlists
 
-    def _get_oauth(self) -> SpotifyOAuth:
+    def _get_oauth(
+        self, force_reauth=False
+    ) -> Union[SpotifyOAuth, SpotifyPKCE]:
+        if force_reauth:
+            self.pd_svc.get_spotify_oauth().unlink(missing_ok=True)
+
         handler = CacheFileHandler(cache_path=self.pd_svc.get_spotify_oauth())
 
-        return SpotifyOAuth(
-            open_browser=False,
-            scope=self.config.data["SPOTIFY_SCOPE"],
-            client_id=self.config.data["SPOTIFY_CLIENT_ID"],
-            client_secret=self.config.data["SPOTIFY_CLIENT_SECRET"],
-            redirect_uri=f'http://127.0.0.1:{self.config.data["SPOTIFY_REDIRECT_URI_PORT"]}',
-            cache_handler=handler,
-        )
+        if self.config.data["SPOTIFY_CUSTOM_APPLICATION_ENABLED"]:
+            return SpotifyOAuth(
+                open_browser=False,
+                scope=self.config.data["SPOTIFY_CUSTOM_APPLICATION_SCOPE"],
+                client_id=self.config.data[
+                    "SPOTIFY_CUSTOM_APPLICATION_CLIENT_ID"
+                ],
+                client_secret=self.config.data[
+                    "SPOTIFY_CUSTOM_APPLICATION_CLIENT_SECRET"
+                ],
+                redirect_uri=f'http://127.0.0.1:{self.config.data["SPOTIFY_CUSTOM_APPLICATION_REDIRECT_URI_PORT"]}',
+                cache_handler=handler,
+            )
+        else:
+            return SpotifyPKCE(
+                open_browser=False,
+                scope="user-library-read, playlist-read-private, playlist-read-collaborative",
+                client_id="33bbbfe2ba9a486ebd39ff4db06c689d",
+                redirect_uri="http://127.0.0.1:9090",
+                cache_handler=handler,
+            )
 
     def _oauth_is_cached(self):
         return (

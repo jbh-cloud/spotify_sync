@@ -16,6 +16,7 @@ from spotify_sync.click_helper import (
     restore_zip_file_force_overwrite,
     restore_zip_file_profile,
     backup_output_dir,
+    force_spotify_reauth,
 )
 
 app = SpotifySyncApp()
@@ -85,13 +86,14 @@ def utils() -> None:
 
 
 @utils.command("authorize-spotify")
+@force_spotify_reauth
 @config_option_group
 @config_option_file
 @config_option_profile
 @log_level
-def authorize_spotify(config, profile, verbose) -> None:
+def authorize_spotify(force_reauth, config, profile, verbose) -> None:
     """Caches Spotify OAuth token"""
-    app.authorize_spotify()
+    app.authorize_spotify(force_reauth)
 
 
 @utils.command("migrate-config")
