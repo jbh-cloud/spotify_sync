@@ -198,6 +198,17 @@ def failed_download_stats(config, profile) -> None:
     app.failed_download_stats()
 
 
+@stats.command("failed-match")
+@config_option_group
+@config_option_file
+@config_option_profile
+def failed_match_stats(config, profile) -> None:
+    """
+    Display songs that failed to match
+    """
+    app.failed_match_stats()
+
+
 @cli.group()
 def config() -> None:
     """

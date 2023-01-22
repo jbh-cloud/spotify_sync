@@ -27,7 +27,7 @@ class SpotifyService:
         self.songs = []
 
     def sync(self):
-        self._preflight()
+        self.preflight()
         cached = self.pd_svc.load_spotify_songs()
         online = self._fetch_liked()
         liked = self._merge_liked(cached, online)
@@ -52,40 +52,6 @@ class SpotifyService:
 
         _auth_headers()
 
-    def display_playlist_stats(self):
-        self._preflight()
-        stats = self._get_playlist_stats()
-        if len(stats) == 0:
-            print("No playlists found")
-            sys.exit(0)
-
-        header = stats[0].keys()
-        rows = [x.values() for x in stats]
-        print()
-        print(tabulate(rows, header))
-        print()
-        sys.exit(0)
-
-    def _get_playlist_stats(self) -> List[dict]:
-        ret = []
-
-        playlists = self._get_all_playlists()
-        for k in playlists:
-            playlist = playlists[k]
-            ret.append(
-                {
-                    "name": playlist["name"],
-                    "id": playlist["id"],
-                    "owner": self.paginator.is_playlist_owner(playlist),
-                    "collaborative": playlist["collaborative"],
-                    "public": playlist["public"],
-                    "tracks": playlist["tracks"]["total"],
-                    "url": playlist["external_urls"]["spotify"],
-                }
-            )
-
-        return ret
-
     def _generate_playlist_songs_mapping(self, playlists: dict):
         ret = {}
         for k, playlist in playlists.items():
@@ -99,7 +65,7 @@ class SpotifyService:
 
         return ret
 
-    def _get_all_playlists(self, playlists_to_exclude=[]):
+    def get_all_playlists(self, playlists_to_exclude=[]):
         return self.paginator.user_playlists(playlists_to_exclude)
 
     def _get_all_playlist_songs(self, playlists):
@@ -126,7 +92,7 @@ class SpotifyService:
 
     def _merge_playlist_songs(self, songs: Dict[str, SpotifySong]):
         self._logger.info("Fetching playlist songs")
-        playlists = self._get_all_playlists(
+        playlists = self.get_all_playlists(
             self.config.data["SPOTIFY_PLAYLISTS_EXCLUDED"]
         )
         playlist_songs = self._get_all_playlist_songs(playlists)
@@ -178,7 +144,7 @@ class SpotifyService:
             and self.pd_svc.get_spotify_oauth().is_file()
         )
 
-    def _preflight(self):
+    def preflight(self):
         if not self._oauth_is_cached():
             command_sffx = (
                 f"--profile {self.config.profile}"

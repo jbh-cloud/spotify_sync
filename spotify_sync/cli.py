@@ -4,6 +4,11 @@ import sys
 
 from spotify_sync.common import get_temp_fn, dump_json
 from spotify_sync.dataclasses import Config
+from spotify_sync.stats import (
+    display_user_playlists,
+    display_failed_download_summary,
+    display_failed_match_summary,
+)
 
 
 class SpotifySyncApp:
@@ -141,7 +146,7 @@ class SpotifySyncApp:
         pd_svc = PersistentDataService(self.config)
         spotify_svc = SpotifyService(self.config, pd_svc)
 
-        spotify_svc.display_playlist_stats()
+        display_user_playlists(spotify_svc)
 
     def validate_downloaded_files(self):
         pass
@@ -154,15 +159,19 @@ class SpotifySyncApp:
 
     def failed_download_stats(self):
         from spotify_sync.io_ import PersistentDataService
-        from spotify_sync.download import DownloadService
-        from spotify_sync.pushover_ import PushoverClient
 
         self._setup(logger=False)
 
         pd_svc = PersistentDataService(self.config)
-        DownloadService(
-            self.config, pd_svc, PushoverClient()
-        ).display_failed_download_stats()
+        display_failed_download_summary(pd_svc)
+
+    def failed_match_stats(self):
+        from spotify_sync.io_ import PersistentDataService
+
+        self._setup(logger=False)
+
+        pd_svc = PersistentDataService(self.config)
+        display_failed_match_summary(pd_svc)
 
     def cache_config_profile(self, name, path):
         self.cc.add(name, path)

@@ -1,6 +1,5 @@
 import sys
 from typing import List
-from tabulate import tabulate
 
 # local imports
 from spotify_sync.dataclasses import ProcessedSong
@@ -104,31 +103,6 @@ class DownloadService:
                 )
 
         return ret
-
-    def get_failed_download_status_summary(self) -> List[dict]:
-        ret = {}
-        processed_songs = self.pd_svc.load_processed_songs()
-        for k in processed_songs:
-            song = processed_songs[k]
-            if song.download_failed:
-                if song.download_failed_reason not in ret:
-                    ret[song.download_failed_reason] = 1
-                else:
-                    ret[song.download_failed_reason] += 1
-
-        return [{"Failed downloads": v, "Reason": k} for k, v in ret.items()]
-
-    def display_failed_download_stats(self) -> None:
-        stats = self.get_failed_download_status_summary()
-        if len(stats) == 0:
-            print("No failed downloads")
-            return
-
-        header = stats[0].keys()
-        rows = [x.values() for x in stats]
-        print()
-        print(tabulate(rows, header))
-        print()
 
     def get_file_download_paths(self, download_report: List[DownloadStatus]):
         for status in download_report:
