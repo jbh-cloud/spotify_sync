@@ -1,14 +1,16 @@
 # spotify_sync
-[![](https://img.shields.io/pypi/pyversions/spot_sync)](https://pypi.org/project/spotify-sync/)
-[![](https://img.shields.io/badge/docs-%20-yellow)](https://docs.spotify-sync.jbh.cloud/)
-[![](https://img.shields.io/github/license/jbh-cloud/spotify_sync)](https://github.com/jbh-cloud/spotify_sync/blob/main/LICENSE.md)
-![](https://img.shields.io/github/stars/jbh-cloud/spotify_sync?style=social)
+[![Python Versions](https://img.shields.io/pypi/pyversions/spot_sync)](https://pypi.org/project/spotify-sync/)
+[![PyPi package](https://img.shields.io/pypi/v/spot-sync)](https://pypi.org/project/spot-sync/)
+[![Downloads](https://static.pepy.tech/badge/spot-sync/month)](https://pepy.tech/project/spot-sync)
+[![License](https://img.shields.io/github/license/jbh-cloud/spotify_sync)](https://github.com/jbh-cloud/spotify_sync/blob/main/LICENSE.md)
+[![Documentation](https://img.shields.io/badge/docs-%20-yellow)](https://docs.spotify-sync.jbh.cloud/)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)]()
 
 ![](run_example.gif)
 
 ## Introduction
 
-spotify_sync is a CLI app written in Python that allows you to download songs from your Spotify account. It is designed to be a 'set and forget' tool for users wanting to keep an offline copy of their songs.
+spotify_sync is a CLI app written in Python allowing you to download songs from your Spotify account. It is designed to be a 'set and forget' tool for users wanting to keep an offline copy of their library. Spotify songs are matched to a 1:1 Deezer equivalent via their [ISRC](https://en.wikipedia.org/wiki/International_Standard_Recording_Code) and then queued for download.
 
 #### Features:
 
@@ -53,6 +55,10 @@ spotify_sync run auto --profile myFirstProfile
 
 Further configuration is required, details for which can be found at the [docs](https://docs.spotify-sync.jbh.cloud/).
 
+
+## Support
+
+If you use or enjoy this project, please give it a :star: or
 
 <a href="https://www.buymeacoffee.com/jbhcloud" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
