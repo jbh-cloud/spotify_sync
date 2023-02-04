@@ -91,9 +91,9 @@ def utils() -> None:
 @config_option_file
 @config_option_profile
 @log_level
-def authorize_spotify(force_reauth, config, profile, verbose) -> None:
+def authorize_spotify(force, config, profile, verbose) -> None:
     """Caches Spotify OAuth token"""
-    app.authorize_spotify(force_reauth)
+    app.authorize_spotify(force)
 
 
 @utils.command("migrate-config")
