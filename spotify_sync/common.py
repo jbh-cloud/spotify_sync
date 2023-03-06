@@ -8,7 +8,7 @@ import hashlib
 import tempfile
 from pathlib import Path
 import uuid
-
+import os
 # local imports
 from spotify_sync.dataclasses import SpotifySong, ProcessedSong
 
@@ -71,6 +71,17 @@ def dump_json(file: Path, data: Any, hidden=False, sort_keys=True) -> None:
 
     if hidden and file.exists():
         set_hidden_attribute(file, mode="unhide")
+
+   # if os.environ.get('Docker') == "True":
+      #  with open(file, mode="w", encoding="utf-8") as f:
+         #   data['deemix']['download_path'] = "/download"
+           # data['deemix']['skip_low_quality'] = os.environ.get('skip_low_qual')
+         #   data['deemix']['arl'] = os.environ.get('ARL')
+         #   data['spotify']['custom_application']['client_id'] =  os.environ.get('spot_id')
+         #   data['spotify']['custom_application']['client_secret'] =  os.environ.get('spot_secret')
+           # data['spotify']['playlists']['enabled'] =  os.environ.get('dow_playlist')
+            #data['spotify']['playlists']['owner_only'] =  os.environ.get('dow_playlist_owner_only')
+           # data['spotify']['username'] =  os.environ.get('spot_username')
 
     with open(file, mode="w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, sort_keys=sort_keys, default=obj_dict)
