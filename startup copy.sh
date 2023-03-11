@@ -24,9 +24,3 @@ while true; do
   sleep "$wait_time"m
 done
 #./root/.config/spotify_sync
-
-
-# get the Playlist dong part
-# get the check songs part
-# make var to list from vars
-# make and check folders

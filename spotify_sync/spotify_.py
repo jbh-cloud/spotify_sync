@@ -28,14 +28,17 @@ class SpotifyService:
 
     def sync(self):
         self.preflight()
+        #check cached 
         cached = self.pd_svc.load_spotify_songs()
+        #get likes
         online = self._fetch_liked()
+        #get back not matching local file 
         liked = self._merge_liked(cached, online)
 
         mapping = {}
         if self.config.data["SPOTIFY_PLAYLISTS_ENABLED"]:
             liked, playlists = self._merge_playlist_songs(liked)
-            mapping = self._generate_playlist_songs_mapping(playlists)
+            mapping = self._generate_playlist_songs_mapping(playlists) # done
 
         self.pd_svc.persist_playlist_mapping(mapping)
         self.pd_svc.persist_spotify_songs(liked)
@@ -102,6 +105,8 @@ class SpotifyService:
             if s.id_ not in songs:
                 songs[s.id_] = s
                 added_playlist_songs += 1
+            #else
+              #   songs[s.id_]['playlist'] = songs[s.id_]['playlist'] + 
 
         self._logger.info(
             f"Adding {added_playlist_songs}/{len(playlist_songs)} from playlists"
@@ -197,7 +202,8 @@ class SpotifyPaginator:
 
     def _get_all(self, route: str, **kwargs) -> dict:
         assert route in ["liked", "playlists", "playlist-songs"]
-
+        self.offset = 0
+        #add which playlist
         if route == "liked":
             return self._page_api(
                 self.spotify_svc.sp.current_user_saved_tracks(limit=50)
@@ -235,23 +241,27 @@ class SpotifyPaginator:
                 self._logger.debug(
                     f'Fetching songs for playlist: {playlist["name"]}'
                 )
-                ret.extend(
-                    self._page_api(
-                        self.spotify_svc.sp.playlist_items(playlist["id"])
-                    )
-                )
+                ret.extend(self._page_api(self.spotify_svc.sp.playlist_items(playlist["id"]),playlist["id"],playlist["name"]))
 
             return ret
 
-    def _page_api(self, api_response: dict) -> dict:
+    def _page_api(self, api_response: dict,id="liked",name="liked") -> dict:
         ret = api_response["items"]
+        if len(id) > 0:
+            add_element = {'playlist': id, 'playlistName':name}
+            for data in ret:
+                data.update(add_element)
         idx = 1
         while api_response["next"]:
             self._logger.debug(f"Sending Spotify API call {idx}")
             api_response = self.spotify_svc.sp.next(api_response)
             ret.extend(api_response["items"])
             idx += 1
-
+        # if len(api_response["items"]) == 50:
+        #      self.offset += 50
+        #      hi = self._page_api(self.spotify_svc.sp.current_user_playlists\
+        #                          (limit=50,offset=self.offset))
+        #      print(hi)
         return ret
 
     @staticmethod

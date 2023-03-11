@@ -29,7 +29,7 @@ class SpotifySyncApp:
 
         pd_svc = PersistentDataService(self.config)
         spotify_svc = SpotifyService(self.config, pd_svc, force_reauth)
-
+        
         spotify_svc.cache_spotify_auth()
         print("Successfully cached Spotify OAuth token!")
 
@@ -55,8 +55,8 @@ class SpotifySyncApp:
         download_svc.preflight()
 
         spotify_svc.sync()
-        match_svc.process_spotify()
-        download_svc.download_missing_tracks()
+        match_svc.process_spotify() # fix sync
+        download_svc.download_missing_tracks() # fix path
         autoscan_svc.scan(download_svc.downloaded_song_paths)
 
         if len(download_svc.downloaded_song_paths) >= 1:

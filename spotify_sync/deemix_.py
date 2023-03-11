@@ -140,6 +140,7 @@ class DeemixHelper:
         self,
     ) -> dict:
         deemix_config = DEFAULTS.copy()
+
         deemix_config["downloadLocation"] = self.config.data[
             "DEEMIX_DOWNLOAD_PATH"
         ]
@@ -160,7 +161,9 @@ class DeemixDownloader:
         self.dz = Deezer()
         self.pushover = pushover
         self.app_config = app_config
+       # print(app_config)
         self.config = DeemixHelper(self.app_config).get_deemix_config()
+      #  print( self.config)
         self.deezer_logged_in = self.dz.login_via_arl(
             self.app_config.data["DEEMIX_ARL"]
         )
@@ -358,9 +361,9 @@ DEFAULTS = {
     "playlistTracknameTemplate": "%position% - %artist% - %title%",
     "createPlaylistFolder": False,
     "playlistNameTemplate": "%playlist%",
-    "createArtistFolder": True,
+    "createArtistFolder": False,
     "artistNameTemplate": "%artist%",
-    "createAlbumFolder": True,
+    "createAlbumFolder": False,
     "albumNameTemplate": "%album%",
     "createCDFolder": False,
     "createStructurePlaylist": True,

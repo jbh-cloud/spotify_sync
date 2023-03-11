@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Python Interactive Shell</title>
+  </head>
+  <body>
+    <h1>Python Interactive Shell</h1>
+    <form method="POST" action="/">
+      <textarea name="code"></textarea>
+      <br>
+      <button type="submit">Run</button>
+    </form>
+    {% if result %}
+      <pre>{{ result }}</pre>
+    {% endif %}
+  </body>
+</html>

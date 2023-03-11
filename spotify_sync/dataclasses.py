@@ -61,6 +61,8 @@ class ProcessedSong:
     spotify_isrc: str = None
     spotify_url: str = None
     spotify_id: str = None
+    spotify_user_album_id: str = None
+    spotify_user_album_name: str = None
     deezer_title: str = None
     deezer_artist: str = None
     deezer_isrc: str = None
@@ -90,6 +92,8 @@ class SpotifySong:
         url=None,
         isrc=None,
         explicit=None,
+        playlist=None,
+        playlistName=None,
     ):
         self.id_: id_
         self.artist: artist
@@ -98,6 +102,8 @@ class SpotifySong:
         self.url: url
         self.isrc: isrc
         self.explicit: explicit
+        self.playlist: playlist
+        self.playlistName: playlistName
 
     def from_api(self, song: dict):
         self.id_ = (
@@ -131,6 +137,16 @@ class SpotifySong:
             if song.get("track") is not None
             else None
         )
+        self.playlist = (
+            song["playlist"]
+            if song.get("track") is not None
+            else None
+        )
+        self.playlistName = (
+            song["playlistName"]
+            if song.get("track") is not None
+            else None
+        )
 
     def from_dict(self, dictionary: dict):
         self.id_ = dictionary["id_"]
@@ -140,6 +156,8 @@ class SpotifySong:
         self.url = dictionary["url"]
         self.isrc = dictionary["isrc"]
         self.explicit = dictionary["explicit"]
+        self.playlist = dictionary["playlist"]
+        self.playlistName = dictionary["playlistName"]
 
     def is_valid(self):
         if self.id_ is not None and self.isrc is not None:

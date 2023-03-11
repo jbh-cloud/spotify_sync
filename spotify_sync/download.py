@@ -35,14 +35,16 @@ class DownloadService:
 
     def get_songs_to_download(self) -> List[ProcessedSong]:
         processed = self.pd_svc.load_processed_songs()
-
-        ret = []
+        
+        playlists = {}
         for k, song in processed.items():
             if song.match_pending_download and not song.download_failed:
                 self._logger.debug(f"{k} is matched and awaiting download")
-                ret.append(song)
-
-        return ret
+                playlist = song.spotify_user_album_id
+                if playlist not in playlists:
+                    playlists[playlist] = []
+                playlists[playlist].append(song)
+        return playlists
 
     def persist_download_status(self, download_statuses) -> None:
         processed = self.pd_svc.load_processed_songs()
@@ -113,16 +115,21 @@ class DownloadService:
         songs = self.get_songs_to_download()
         if not songs:
             return
+        static_path = self.config.data['DEEMIX_DOWNLOAD_PATH']
+        for playlist_name, playlist_songs in songs.items():
+            self._logger.info(f"Downloading {len(playlist_songs)} song(s) from Deezer from playlist:"+ playlist_songs[0].spotify_user_album_name)
+        # if len(spotify_user_album_id))<1:
+            self.config.data['DEEMIX_DOWNLOAD_PATH'] = static_path + "/" \
+                +playlist_songs[0].spotify_user_album_name +"  ("+ playlist_name[:4] + ")"
+            downloader = DeemixDownloader(
+                app_config=self.config, pushover=self._pushover
+            )
+            downloader.download_songs(playlist_songs)
+            failed_songs, succeeded_songs, reports = downloader.get_report()
+            self._logger.info(
+                f"Successfully downloaded {succeeded_songs}/{len(songs)}"
+            )
 
-        self._logger.info(f"Downloading {len(songs)} song(s) from Deezer")
-        downloader = DeemixDownloader(
-            app_config=self.config, pushover=self._pushover
-        )
-        downloader.download_songs(songs)
-        failed_songs, succeeded_songs, reports = downloader.get_report()
-        self._logger.info(
-            f"Successfully downloaded {succeeded_songs}/{len(songs)}"
-        )
-
-        self.persist_download_status(reports)
-        self.get_file_download_paths(reports)
+            self.persist_download_status(reports)
+            self.get_file_download_paths(reports)
+        self.config.data['DEEMIX_DOWNLOAD_PATH'] = static_path

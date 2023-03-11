@@ -135,7 +135,7 @@ class MatchService:
 
     def process_spotify(self):
         self.pd_svc.verify_files()
-        self._refresh_files()
+        self._refresh_files() #Fix
         self._match_unprocessed()
         self.pd_svc.persist_processed_songs(self.processed)
 
@@ -145,7 +145,7 @@ class MatchService:
         self.unprocessed = self._get_unprocessed_songs()
 
     def _get_unprocessed_songs(self) -> Dict[str, SpotifySong]:
-        self.unprocessed = {}
+        self.unprocessed = {} # Fix
         for k in self.spotify:
             if k not in self.processed:
                 self.unprocessed[k] = self.spotify[k]
@@ -169,6 +169,8 @@ class MatchService:
             spotify_isrc=matcher.song.isrc,
             spotify_url=matcher.song.url,
             spotify_id=matcher.song.id_,
+            spotify_user_album_id=matcher.song.playlist,
+            spotify_user_album_name=matcher.song.playlistName,
             deezer_title=matcher.match_payload["title"]
             if matcher.match
             else None,

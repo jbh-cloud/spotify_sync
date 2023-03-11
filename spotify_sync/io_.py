@@ -90,6 +90,7 @@ class PersistentDataService:
         return snapshot
 
     def get_spotify_songs_path(self) -> Path:
+      #  print (f'spotify-{self.config.data["SPOTIFY_USERNAME"]}.json')
         return (
             self.user_root
             / f'spotify-{self.config.data["SPOTIFY_USERNAME"]}.json'

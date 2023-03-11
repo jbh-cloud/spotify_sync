@@ -1,0 +1,52 @@
+FROM python:3.8-slim-buster
+
+#Set Environment Vars for docker
+ENV arl=495dd67b442ddf3db37f7f682203772fbb82271f9c5b29e80266dfdc5e1aa2d27555f3de9822985349a8a343b711e287b5b3bb4787327970cf044f3fa9af2296e733259839057232968f65ff53c8f6ec2cad7e965407da560fed30bd1f93baee 
+ENV	spot_id=53542c52a4a4487ca78dcd82b394b2f5  
+ENV	spot_secret=30cce1abb58f4caa95acb3bba065d12f 
+ENV	spot_username=**None** 
+#minute wait 
+ENV	wait_time=10
+    #	DiscordBotToken = **None** \ 
+	#CHANNEL = **None** 
+
+EXPOSE 9090
+RUN mkdir /download
+RUN mkdir /app
+RUN mkdir /root/.config/spotify_sync -p
+
+COPY config.json /app
+COPY startup.sh /app
+
+WORKDIR /app
+RUN chmod +x startup.sh
+# install spot_sync from requirements 
+RUN pip3 install --no-cache-dir --upgrade pip && pip install -U spot_sync --no-cache-dir 
+
+# cmd to run container at start
+CMD ["/bin/bash", "/app/startup.sh"]
+#CMD ["/bin/bash"]
+
+# docker build --pull --rm -f "Dockerfile" -t spotifysync:0.3.1 "." --no-cache
+# docker run -it --name spotifysync --rm  -v /home/user/Schreibtisch/tempp:/root/.config/spotify_sync  spotifysync:0.3.1 
+# docker run -d --name spotifysync -v /home/user/Schreibtisch/tempp:/root/.config/spotify_sync  spotifysync:0.3.1
+
+
+
+Temp solution: 
+you need a right config.json in the same Folder as Dockerfile
+Commands do execute are in Dockerfile 
+i have a dirty python is in next commit so you can may clean it and remove my startup.sh 
+#	new file:   Dockerfile
+#	new file:   startup.sh
+#
+# Changes not staged for commit:
+#	modified:   spotify_sync/common.py
+#
+# Untracked files:
+#	.devcontainer/
+#	.vscode/
+#	1.sh
+#	Dockerfile copy
+#	config2.json
+#

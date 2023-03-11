@@ -129,7 +129,7 @@ def manual_plex_scan(paths: typing.Tuple[str]) -> None:
     """
     app.scan([p for p in paths])
 
-
+# python3 /home/user/Dokumente/spotify_sync/spotify_sync/__main__.py run sync-spotify --profile myFirstProfile
 # @utils.command("validate-downloaded-files")
 # @config_option_group
 # @config_option_file
@@ -261,3 +261,6 @@ def config_generate() -> None:
 
 if __name__ == "__main__":
     cli()
+
+#Todo:
+#get

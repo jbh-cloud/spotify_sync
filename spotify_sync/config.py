@@ -95,7 +95,7 @@ class ConfigCache:
         for p in self.profiles:
             c_loader = ConfigLoader(profile=p)
             conf = c_loader.load()
-
+            print(conf["SPOTIFY_USERNAME"])
             summary_data.append(
                 [
                     p.name,
