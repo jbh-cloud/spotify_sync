@@ -3,6 +3,7 @@ import click
 
 # local imports
 from spotify_sync.cli import SpotifySyncApp
+from spotify_sync import __version__ as spotify_sync_version
 from spotify_sync.click_helper import (
     restore_zip_file,
     log_level,
@@ -129,6 +130,13 @@ def manual_plex_scan(paths: typing.Tuple[str]) -> None:
     """
     app.scan([p for p in paths])
 
+
+@utils.command("version")
+def version():
+    """
+    Get the current version of spotify_sync
+    """
+    print(spotify_sync_version)
 
 # @utils.command("validate-downloaded-files")
 # @config_option_group
