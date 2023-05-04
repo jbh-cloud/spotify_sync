@@ -6,6 +6,7 @@ from typing import List, Dict, Union
 
 # Local imports
 from spotify_sync.config import Config
+from spotify_sync.errors import OAuthNotFound
 from spotify_sync.io_ import PersistentDataService
 from spotify_sync.dataclasses import SpotifySong
 
@@ -48,7 +49,7 @@ class SpotifyService:
                 token = auth.get_access_token(as_dict=False)
             except TypeError:
                 token = auth.get_access_token()
-            return {"Authorization": "Bearer {0}".format(token)}
+            return {"Authorization": f"Bearer {token}"}
 
         _auth_headers()
 
@@ -154,7 +155,9 @@ class SpotifyService:
             self._logger.error(
                 f'No Spotify OAuth token found, please cache one using "spotify_sync utils authorize-spotify {command_sffx}"'
             )
-            sys.exit(1)
+            raise OAuthNotFound(
+                f"No Spotify OAuth token found, please cache one using 'spotify_sync utils authorize-spotify {command_sffx}'"
+            )
 
 
 class SpotifyPaginator:
@@ -195,7 +198,7 @@ class SpotifyPaginator:
 
         return ret
 
-    def _get_all(self, route: str, **kwargs) -> dict:
+    def _get_all(self, route: str, **kwargs) -> Union[dict, list]:
         assert route in ["liked", "playlists", "playlist-songs"]
 
         if route == "liked":

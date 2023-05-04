@@ -93,23 +93,43 @@
         "playlists"
       ]
     },
-    "pushover": {
+    "notification": {
       "type": "object",
       "properties": {
-        "enabled": {
-          "type": "boolean"
+        "strategy": {
+          "type": "integer"
         },
-        "user_key": {
-          "type": "string"
-        },
-        "api_token": {
-          "type": "string"
+        "provider": {
+          "type": "object",
+          "properties": {
+            "pushover": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "user_key": {
+                  "type": "string"
+                },
+                "api_token": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "enabled",
+                "user_key",
+                "api_token"
+              ]
+            }
+          },
+          "required": [
+            "pushover"
+          ]
         }
       },
       "required": [
-        "enabled",
-        "user_key",
-        "api_token"
+        "strategy",
+        "provider"
       ]
     },
     "autoscan": {
@@ -145,7 +165,7 @@
     "anon_metrics_enable",
     "deemix",
     "spotify",
-    "pushover",
+    "notification",
     "autoscan"
   ]
 }

@@ -8,3 +8,19 @@ class RestoreZipNotExists(Exception):
 
 class JsonSchemaInvalid(Exception):
     pass
+
+
+class SpotifyError(Exception):
+    pass
+
+
+class OAuthNotFound(SpotifyError):
+    pass
+
+
+class DeezerError(Exception):
+    pass
+
+
+class ArlInvalid(DeezerError):
+    pass

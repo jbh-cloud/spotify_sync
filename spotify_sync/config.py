@@ -379,6 +379,15 @@ def auto_update_config(config: dict) -> dict:
                 # Unable to parse threads from str, using all available
                 c["threads"] = -1
 
+        if c.get("pushover") is not None:
+            c["notification"] = {
+                "strategy": 1,
+                "provider": {
+                    "pushover": c["pushover"]
+                }
+            }
+            del c["pushover"]
+
         return c
     except Exception:
         return config

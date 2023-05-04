@@ -35,6 +35,9 @@ pre-commit = "^2.20.0"
 [tool.poetry.scripts]
 spotify_sync = "spotify_sync.__main__:cli"
 
+[tool.poetry.group.dev.dependencies]
+pytest-mock = "^3.10.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

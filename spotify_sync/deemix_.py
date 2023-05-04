@@ -13,8 +13,8 @@ from deemix.types.DownloadObjects import Single
 # local imports
 from spotify_sync.config import Config
 from spotify_sync.dataclasses import ProcessedSong, DownloadStatus
-from spotify_sync.common import get_md5, dump_json, load_json
-from spotify_sync.pushover_ import PushoverClient
+from spotify_sync.common import get_md5
+from spotify_sync.notification import PushoverClient, NotificationType
 
 arl_valid = False
 
@@ -99,9 +99,6 @@ class DeemixHelper:
                 arl_valid = True
                 return True
             else:
-                self._logger.error(
-                    "Failed to login to Deezer with arl, you may need to refresh it"
-                )
                 return False
 
     def check_deemix_config(self):
@@ -212,7 +209,7 @@ class DeemixDownloader:
             if skip_low_quality_enforced:
                 msg = f"SKIP_LOW_QUALITY is specified and unable to stream {self.max_bitrate}, stopping script!\nIf this is unexpected, please ensure your Deezer account is Premium/Hi-Fi"
                 self._logger.error(msg)
-                self.pushover.send_message(msg)
+                self.pushover.send_failure(msg)
                 sys.exit(1)
 
         self._logger.info(
@@ -252,13 +249,12 @@ class DeemixDownloader:
 
     @staticmethod
     def download_skipped(listener: LogListener):
-        download_skipped = False
         for m in listener.messages:
             if "downloadInfo" in m:
                 if m["downloadInfo"].get("state") == "alreadyDownloaded":
-                    download_skipped = True
+                    return True
 
-        return download_skipped
+        return False
 
     def update_download_report(
         self,
@@ -290,27 +286,27 @@ class DeemixDownloader:
 
             if download_skipped:
                 dl_logger.info(
-                    action="FINSIHED", message="Skipping, already downloaded"
+                    action="FINISHED", message="Skipping, already downloaded"
                 )
                 status = True
                 md5 = get_md5(f)
 
             elif os.path.isfile(f):
                 dl_logger.info(
-                    action="FINSIHED", message="Successfully downloaded"
+                    action="FINISHED", message="Successfully downloaded"
                 )
                 status = True
                 md5 = get_md5(f)
             else:
                 dl_logger.warn(
-                    action="FINSIHED",
+                    action="FINISHED",
                     message=f"Failed, downloaded but could not find {f}",
                 )
                 errors = [f"Downloaded but could not find {f}"]
 
         elif download_object.failed == 1:
             dl_logger.warn(
-                action="FINSIHED",
+                action="FINISHED",
                 message=f'Failed, download for DeezerId: {download_object.single["trackAPI"]["id"]} error: {download_object.errors[0]["message"]}',
             )
             errors = download_object.errors
