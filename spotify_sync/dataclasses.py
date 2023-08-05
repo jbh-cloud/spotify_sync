@@ -104,13 +104,13 @@ class SpotifySong:
             song["track"]["id"] if song.get("track") is not None else None
         )
         self.artist = (
-            song["track"]["artists"][0]["name"]
+            song["track"]["artists"][0]["name"] if 'artists' in song["track"] and len(song["track"]["artists"]) > 0 else "Unknown Artist"
             if song.get("track") is not None
             else None
         )
         self.album = (
             song["track"]["album"]["name"]
-            if song.get("track") is not None
+            if song.get("track") is not None and "album" in song["track"]
             else None
         )
         self.title = (
@@ -123,7 +123,7 @@ class SpotifySong:
         )
         self.isrc = (
             song["track"]["external_ids"].get("isrc")
-            if song.get("track") is not None
+            if song.get("track") is not None and "external_ids" in song["track"]
             else None
         )
         self.explicit = (
@@ -145,4 +145,4 @@ class SpotifySong:
         if self.id_ is not None and self.isrc is not None:
             return True
 
-        return False
+        return False	
