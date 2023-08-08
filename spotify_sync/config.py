@@ -10,6 +10,7 @@ from datetime import datetime
 from tabulate import tabulate
 from typing import List, Union
 from jsonschema import validate
+from json import JSONDecodeError
 from pkg_resources import resource_stream
 
 # local imports
@@ -282,35 +283,39 @@ class ConfigLoader:
             sys.exit(1)
 
     def _load_config(self) -> None:
-        if self.profile is None and self.config_file is None:
-            raise Exception(
-                "Must either specify a config file or config profile!"
-            )
+        try:
+            if self.profile is None and self.config_file is None:
+                raise Exception(
+                    "Must either specify a config file or config profile!"
+                )
 
-        if self.profile is not None:
-            config_path = self.profile.path
-            validation_msg_error = (
-                f"Config for profile {self.profile.name} is not valid"
-            )
-        else:
-            config_path = self.config_file
-            validation_msg_error = (
-                f"Config file is not valid: {self.config_file}"
-            )
+            if self.profile is not None:
+                config_path = self.profile.path
+                validation_msg_error = (
+                    f"Config for profile {self.profile.name} is not valid"
+                )
+            else:
+                config_path = self.config_file
+                validation_msg_error = (
+                    f"Config file is not valid: {self.config_file}"
+                )
 
-        with open(config_path, mode="r", encoding="utf-8") as f:
-            self._config = json.load(f)
+            with open(config_path, mode="r", encoding="utf-8") as f:
+                self._config = json.load(f)
 
-        self._validate(self._config)
-        if not self.is_valid and not self._try_auto_update_config():
-            print(validation_msg_error)
-            print(f"Validation error: {self.validation_msg}")
-            print(
-                "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
-            )
+            self._validate(self._config)
+            if not self.is_valid and not self._try_auto_update_config():
+                print(validation_msg_error)
+                print(f"Validation error: {self.validation_msg}")
+                print(
+                    "Please review: https://docs.spotify-sync.jbh.cloud/configuration/schema"
+                )
+                sys.exit(1)
+
+            self._parse_threads()
+        except JSONDecodeError:
+            print(f"Config file is not valid json: {config_path}")
             sys.exit(1)
-
-        self._parse_threads()
 
     def _parse_threads(self) -> None:
         # Ensure key case correct
