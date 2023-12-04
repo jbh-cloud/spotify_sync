@@ -66,3 +66,6 @@ jobs:
 
       - name: Code Quality
         run: poetry run black . --check
+
+      - name: Unit Tests
+        run: poetry run pytest spotify_sync/tests

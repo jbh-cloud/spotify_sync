@@ -1,0 +1,38 @@
+{
+    "threads": -1,
+    "anon_metrics_enable": true,
+    "deemix": {
+        "arl": "9fd6f15...68e755125e11b",
+        "download_path": "/home/ubuntu/spotify_music",
+        "max_bitrate": "lossless",
+        "skip_low_quality": true,
+        "strict_matching": true
+    },
+    "spotify": {
+        "custom_application": {
+            "enabled": false,
+            "client_id": "",
+            "client_secret": "",
+            "scope": "user-library-read, playlist-read-private, playlist-read-collaborative",
+            "redirect_uri_port": "9090"
+        },
+        "username": "",
+        "playlists": {
+            "enabled": false,
+            "owner_only": true,
+            "excluded": []
+        }
+    },
+    "pushover": {
+        "enabled": false,
+        "user_key": "",
+        "api_token": ""
+    },
+    "autoscan": {
+        "enabled": false,
+        "endpoint": "http://my-api-endpoint.com:3030/triggers/manual",
+        "auth_enabled": true,
+        "username": "admin",
+        "password": "ThisIsNotARealPassword"
+    }
+}
