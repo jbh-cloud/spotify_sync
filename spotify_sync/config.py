@@ -387,9 +387,7 @@ def auto_update_config(config: dict) -> dict:
         if c.get("pushover") is not None:
             c["notification"] = {
                 "strategy": 1,
-                "provider": {
-                    "pushover": c["pushover"]
-                }
+                "provider": {"pushover": c["pushover"]},
             }
             del c["pushover"]
 

@@ -29,8 +29,12 @@ class DownloadService:
     def preflight(self) -> None:
         helper = DeemixHelper(self.config)
         if not helper.arl_valid():
-            self._logger.error("Failed to validate arl, you may need to refresh it")
-            raise ArlInvalid("Failed to validate arl, you may need to refresh it")
+            self._logger.error(
+                "Failed to validate arl, you may need to refresh it"
+            )
+            raise ArlInvalid(
+                "Failed to validate arl, you may need to refresh it"
+            )
 
         helper.check_deemix_config()
 

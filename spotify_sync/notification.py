@@ -18,19 +18,21 @@ class NotificationClient:
 
         self._logger = self._get_logger()
         self._app_config = app_config
-        self._strategy = NotificationType(self._app_config.data["NOTIFICATION_STRATEGY"])
+        self._strategy = NotificationType(
+            self._app_config.data["NOTIFICATION_STRATEGY"]
+        )
         self._is_valid = False
         self._is_enabled = False
         self._strategy_map = {
             NotificationType.INFO: (
                 NotificationType.INFO,
                 NotificationType.CHANGE,
-                NotificationType.FAILURE
+                NotificationType.FAILURE,
             ),
             NotificationType.CHANGE: (
                 NotificationType.CHANGE,
-                NotificationType.FAILURE
-            )
+                NotificationType.FAILURE,
+            ),
         }
 
     @property
@@ -65,6 +67,7 @@ class NotificationClient:
     @classmethod
     def _get_logger(cls) -> logging.Logger:
         from spotify_sync.log import get_logger
+
         return get_logger().getChild(cls.__name__)
 
     def _get_title(self):
@@ -78,7 +81,10 @@ class NotificationClient:
         if self._strategy == msg_type:
             return True
 
-        if self._strategy in self._strategy_map and msg_type in self._strategy_map[self._strategy]:
+        if (
+            self._strategy in self._strategy_map
+            and msg_type in self._strategy_map[self._strategy]
+        ):
             return True
 
         return False
@@ -111,9 +117,15 @@ class PushoverClient(NotificationClient):
     def _setup(self):
         if self._app_config.data["NOTIFICATION_PROVIDER_PUSHOVER_ENABLED"]:
             self._is_enabled = True
-            self._app = Application(self._app_config.data["NOTIFICATION_PROVIDER_PUSHOVER_API_TOKEN"])
+            self._app = Application(
+                self._app_config.data[
+                    "NOTIFICATION_PROVIDER_PUSHOVER_API_TOKEN"
+                ]
+            )
             self._user = self._app.get_user(
-                self._app_config.data["NOTIFICATION_PROVIDER_PUSHOVER_USER_KEY"]
+                self._app_config.data[
+                    "NOTIFICATION_PROVIDER_PUSHOVER_USER_KEY"
+                ]
             )
             self._validate()
 

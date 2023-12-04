@@ -138,6 +138,7 @@ def version():
     """
     print(spotify_sync_version)
 
+
 # @utils.command("validate-downloaded-files")
 # @config_option_group
 # @config_option_file

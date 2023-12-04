@@ -74,10 +74,11 @@ class SpotifySyncApp:
             self.pushover.send_failure(str(e))
         except Exception as e:
             self._logger.exception(e)
-            self.pushover.send_failure("Ran into unhandled exception, see logs for details")
+            self.pushover.send_failure(
+                "Ran into unhandled exception, see logs for details"
+            )
         finally:
             sys.exit(1)
-
 
     def sync_spotify(self):
         from spotify_sync.io_ import PersistentDataService
