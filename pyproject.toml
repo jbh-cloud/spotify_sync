@@ -31,12 +31,10 @@ flatdict = "^4.0.1"
 black = {version = "^22.6.0", allow-prereleases = true}
 pytest = "^7.1.2"
 pre-commit = "^2.20.0"
+pytest-mock = "^3.10.0"
 
 [tool.poetry.scripts]
 spotify_sync = "spotify_sync.__main__:cli"
-
-[tool.poetry.group.dev.dependencies]
-pytest-mock = "^3.10.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
