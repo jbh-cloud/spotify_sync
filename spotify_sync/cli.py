@@ -2,6 +2,8 @@
 
 import sys
 
+from spotify_sync.errors import OAuthNotFound, ArlInvalid
+from spotify_sync.notification import NotificationType
 from spotify_sync.common import get_temp_fn, dump_json
 from spotify_sync.dataclasses import Config
 from spotify_sync.stats import (
@@ -43,7 +45,7 @@ class SpotifySyncApp:
         self._setup()
 
         self.log("Script started with auto command")
-        self.pushover.send_message("auto started")
+        self.pushover.send_info("auto started")
 
         pd_svc = PersistentDataService(self.config)
         spotify_svc = SpotifyService(self.config, pd_svc)
@@ -51,22 +53,32 @@ class SpotifySyncApp:
         download_svc = DownloadService(self.config, pd_svc, self.pushover)
         autoscan_svc = AutoScanService(self.config)
 
-        # Checks
-        download_svc.preflight()
+        try:
+            # Checks
+            download_svc.preflight()
 
-        spotify_svc.sync()
-        match_svc.process_spotify()
-        download_svc.download_missing_tracks()
-        autoscan_svc.scan(download_svc.downloaded_song_paths)
+            spotify_svc.sync()
+            match_svc.process_spotify()
+            download_svc.download_missing_tracks()
+            autoscan_svc.scan(download_svc.downloaded_song_paths)
 
-        if len(download_svc.downloaded_song_paths) >= 1:
-            self.pushover.send_message(
-                f"Successfully downloaded {len(download_svc.downloaded_song_paths)} new songs(s)"
+            if len(download_svc.downloaded_song_paths) >= 1:
+                self.pushover.send_change(
+                    f"Successfully downloaded {len(download_svc.downloaded_song_paths)} new songs(s)"
+                )
+
+            self.pushover.send_info("auto finished")
+            self.log("Script finished")
+            sys.exit(0)
+        except (OAuthNotFound, ArlInvalid) as e:
+            self.pushover.send_failure(str(e))
+        except Exception as e:
+            self._logger.exception(e)
+            self.pushover.send_failure(
+                "Ran into unhandled exception, see logs for details"
             )
-
-        self.pushover.send_message("auto finished")
-        self.log("Script finished")
-        sys.exit(0)
+        finally:
+            sys.exit(1)
 
     def sync_spotify(self):
         from spotify_sync.io_ import PersistentDataService
@@ -75,14 +87,14 @@ class SpotifySyncApp:
         self._setup()
 
         self.log("Script started with sync-spotify command")
-        self.pushover.send_message("sync-spotify started")
+        self.pushover.send_info("sync-spotify started")
 
         pd_svc = PersistentDataService(self.config)
         spotify_svc = SpotifyService(self.config, pd_svc)
 
         spotify_svc.sync()
 
-        self.pushover.send_message("sync-spotify finished")
+        self.pushover.send_info("sync-spotify finished")
         self.log("Script finished")
         sys.exit(0)
 
@@ -93,14 +105,14 @@ class SpotifySyncApp:
         self._setup()
 
         self.log("Script started with match-spotify command")
-        self.pushover.send_message("match-spotify started")
+        self.pushover.send_info("match-spotify started")
 
         pd_svc = PersistentDataService(self.config)
         match_svc = MatchService(self.config, pd_svc)
 
         match_svc.process_spotify()
 
-        self.pushover.send_message("match-spotify finished")
+        self.pushover.send_info("match-spotify finished")
         self.log("Script finished")
         sys.exit(0)
 
@@ -111,7 +123,7 @@ class SpotifySyncApp:
         self._setup()
 
         self.log("Script started with download-missing command")
-        self.pushover.send_message("download-missing started")
+        self.pushover.send_info("download-missing started")
 
         pd_svc = PersistentDataService(self.config)
         download_svc = DownloadService(self.config, pd_svc, self.pushover)
@@ -121,7 +133,7 @@ class SpotifySyncApp:
 
         download_svc.download_missing_tracks()
 
-        self.pushover.send_message("download-missing finished")
+        self.pushover.send_info("download-missing finished")
         self.log("Script finished")
         sys.exit(0)
 
@@ -313,7 +325,7 @@ class SpotifySyncApp:
         self._logger = get_logger().getChild("SpotifySync")
 
     def _setup(self, logger=True):
-        from spotify_sync.pushover_ import PushoverClient
+        from spotify_sync.notification import PushoverClient
 
         self._load_config()
         if logger:

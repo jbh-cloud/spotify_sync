@@ -23,16 +23,11 @@
             "excluded": []
         }
     },
-    "notification": {
-         "provider": {
-             "pushover": {
-                "enabled": false,
-                "api_token": "",
-                "user_key": ""
-             }
-         },
-         "strategy": 2
-     },
+    "pushover": {
+        "enabled": false,
+        "user_key": "",
+        "api_token": ""
+    },
     "autoscan": {
         "enabled": false,
         "endpoint": "http://my-api-endpoint.com:3030/triggers/manual",

@@ -4,10 +4,11 @@ from typing import List
 # local imports
 from spotify_sync.dataclasses import ProcessedSong
 from spotify_sync.deemix_ import DownloadStatus, DeemixDownloader
+from spotify_sync.errors import ArlInvalid
 from spotify_sync.io_ import PersistentDataService
 from spotify_sync.config import Config
 from spotify_sync.deemix_ import DeemixHelper
-from spotify_sync.pushover_ import PushoverClient
+from spotify_sync.notification import PushoverClient, NotificationType
 
 
 class DownloadService:
@@ -28,8 +29,12 @@ class DownloadService:
     def preflight(self) -> None:
         helper = DeemixHelper(self.config)
         if not helper.arl_valid():
-            self._pushover.send_message("Failed to validate arl")
-            sys.exit(1)
+            self._logger.error(
+                "Failed to validate arl, you may need to refresh it"
+            )
+            raise ArlInvalid(
+                "Failed to validate arl, you may need to refresh it"
+            )
 
         helper.check_deemix_config()
 
